@@ -15,6 +15,7 @@ const libraries = ['drawing'];
 function MapComponent() {
 
     const [cropPolygons, setCropPolygons] = useState([]);
+    const [cropColor, setCropColor] = useState('green');
     const [fPolygons, setfPolygons] = useState([]);
     const {isLoaded, loadError} = useLoadScript({
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY, libraries,
@@ -45,12 +46,17 @@ function MapComponent() {
             .then(data => {
                 console.log(data);
                 polygon.setMap(null);
-                if (data.crop && Array.isArray(data.crop)) {
+                if (data.crop && Array.isArray(data.crop) && data.crop.length > 0) {
+                    setCropColor('green')
                     setCropPolygons(transformCoordinates(data.crop));
                 }
-                // if (data.f && Array.isArray(data.f)) {
-                //     setfPolygons(transformCoordinates(data.f));
-                // }
+                if (Array.isArray(data.crop) && data.crop.length === 0) {
+                    setCropColor('red')
+                    setCropPolygons(transformCoordinates(coordinates));
+                }
+                if (data.f && Array.isArray(data.f)) {
+                    setfPolygons(transformCoordinates(data.f));
+                }
             })
             .catch(error => console.error('Error:', error));
     };
@@ -69,15 +75,15 @@ function MapComponent() {
                 polygonOptions: {
                     fillColor: '#676560',
                     fillOpacity: 0.7,
-                    strokeWeight: 2,
+                    strokeWeight: 0.5,
                     clickable: true,
                     editable: true,
                     zIndex: 1
                 }
             }}
         />
-        {renderPolygons(cropPolygons, 'green')}
-        {/*{renderPolygons(fPolygons, 'blue')}*/}
+        {renderPolygons(cropPolygons, cropColor)}
+        {renderPolygons(fPolygons, 'blue')}
     </GoogleMap>);
 
     function renderPolygons(polygons, color) {
