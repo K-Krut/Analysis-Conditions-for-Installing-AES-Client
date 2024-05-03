@@ -17,6 +17,8 @@ function MapComponent() {
     const [cropPolygons, setCropPolygons] = useState([]);
     const [cropColor, setCropColor] = useState('green');
     const [fPolygons, setfPolygons] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
     const {isLoaded, loadError} = useLoadScript({
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY, libraries,
     });
@@ -39,6 +41,7 @@ function MapComponent() {
     };
 
     const onPolygonComplete = polygon => {
+        setIsLoading(true);
         const coordinates = (polygon.getPath().getArray().map(coord => [coord.lng(), coord.lat()]));
         console.log(coordinates)
         fetch('http://127.0.0.1:8000/api/polygon/', {
@@ -49,6 +52,7 @@ function MapComponent() {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
+                setIsLoading(false);
                 polygon.setMap(null);
                 if (data.crop && Array.isArray(data.crop) && data.crop.length > 0) {
                     setCropColor('green')
@@ -62,7 +66,11 @@ function MapComponent() {
                     setfPolygons(transformCoordinates(data.f));
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                    setIsLoading(false);
+                    console.error('Error:', error);
+                }
+            );
     };
 
     return (<GoogleMap
@@ -87,6 +95,11 @@ function MapComponent() {
                 }
             }}
         />
+        {isLoading && (
+            <div className="loading-overlay">
+                <div className="spinner"></div>
+            </div>
+        )}
         {renderPolygons(cropPolygons, cropColor)}
         {renderPolygons(fPolygons, 'blue')}
     </GoogleMap>);

@@ -20,21 +20,6 @@ const HeroSection = () => {
               Solar Navigator
             </span>
             <br></br>
-            {/*<TypeAnimation*/}
-            {/*  sequence={[*/}
-            {/*    "Judy",*/}
-            {/*    4000,*/}
-            {/*    "Web Developer",*/}
-            {/*    4000,*/}
-            {/*    "Mobile Developer",*/}
-            {/*    4000,*/}
-            {/*    "UI/UX Designer",*/}
-            {/*    4000,*/}
-            {/*  ]}*/}
-            {/*  wrapper="span"*/}
-            {/*  speed={50}*/}
-            {/*  repeat={Infinity}*/}
-            {/*/>*/}
           </h1>
           <p className="text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl">
             «Програмний застосунок аналізу умов щодо встановлення джерел альтернативної енергетики на місцевості»
