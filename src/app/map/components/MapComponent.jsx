@@ -65,6 +65,7 @@ function MapComponent() {
         mapContainerStyle={mapContainerStyle}
         center={center}
         zoom={14}
+        mapTypeId={google.maps.MapTypeId.SATELLITE}
     >
         <DrawingManager
             onPolygonComplete={onPolygonComplete}
