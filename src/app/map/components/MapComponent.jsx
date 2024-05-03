@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {GoogleMap, DrawingManager, useLoadScript, Polygon} from "@react-google-maps/api";
+import React, {useState} from 'react';
+import {DrawingManager, GoogleMap, Polygon, useLoadScript} from "@react-google-maps/api";
 
 
 const mapContainerStyle = {
@@ -25,14 +25,11 @@ function MapComponent() {
 
     const transformCoordinates = (coords) => {
         if (!Array.isArray(coords)) {
-            console.error("Expected an array of coordinates, received:", coords);
             return [];
         }
 
-        return coords.map(polygon => {
-            return polygon.map(([lng, lat]) => ({
-                lat: lat, lng: lng
-            }));
+        return coords.map(([lng, lat]) => {
+            return {lat: lat, lng: lng}
         });
     };
 
@@ -49,9 +46,7 @@ function MapComponent() {
                 console.log(data);
                 polygon.setMap(null);
                 if (data.crop && Array.isArray(data.crop)) {
-                    // console.log(transformCoordinates(data.crop))
-                    setCropPolygons(data.crop);
-                    // setCropPolygons(transformCoordinates(data.crop));
+                    setCropPolygons(transformCoordinates(data.crop));
                 }
                 // if (data.f && Array.isArray(data.f)) {
                 //     setfPolygons(transformCoordinates(data.f));
@@ -86,9 +81,25 @@ function MapComponent() {
     </GoogleMap>);
 
     function renderPolygons(polygons, color) {
-        return polygons.map((path, index) => (<Polygon
-                key={`${color}-${index}`}
-                paths={path}
+        if (Array.isArray(polygons[0])) {
+            return polygons.map((path, index) => (
+                <Polygon
+                    key={`${color}-${index}`}
+                    paths={path}
+                    options={{
+                        fillColor: color,
+                        fillOpacity: 0.5,
+                        strokeWeight: 2,
+                        clickable: true,
+                        editable: false,
+                        zIndex: 1
+                    }}
+                />
+            ));
+        }  else {
+            return <Polygon
+                key={`${color}`}
+                paths={polygons}
                 options={{
                     fillColor: color,
                     fillOpacity: 0.5,
@@ -97,7 +108,8 @@ function MapComponent() {
                     editable: false,
                     zIndex: 1
                 }}
-            />));
+            />
+        }
     }
 }
 
