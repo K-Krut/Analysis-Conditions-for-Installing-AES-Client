@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
+    "@nextui-org/skeleton": "^2.0.27",
+    "@nextui-org/theme": "^2.2.3",
     "@react-google-maps/api": "^2.19.3",
     "autoprefixer": "10.4.15",
     "eslint": "8.47.0",

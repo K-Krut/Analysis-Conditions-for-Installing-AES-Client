@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {DrawingManager, GoogleMap, Polygon, useLoadScript} from "@react-google-maps/api";
-
+import {Skeleton} from "@nextui-org/skeleton";
 
 const mapContainerStyle = {
     width: '100%', height: '600px'
@@ -21,8 +21,12 @@ function MapComponent() {
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY, libraries,
     });
 
-    if (loadError) return <div>Error loading maps</div>;
-    if (!isLoaded) return <div>Loading Maps...</div>;
+    if (loadError) return (
+        <div>Error loading maps</div>
+    );
+    if (!isLoaded) return (
+        <Skeleton className="w-[100%] h-[600px]" />
+    );
 
     const transformCoordinates = (coords) => {
         if (!Array.isArray(coords)) {
@@ -103,7 +107,7 @@ function MapComponent() {
                     }}
                 />
             ));
-        }  else {
+        } else {
             return <Polygon
                 key={`${color}`}
                 paths={polygons}
