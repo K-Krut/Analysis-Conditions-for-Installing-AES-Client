@@ -1,6 +1,5 @@
 import React, {useState, useRef} from 'react';
 import {Autocomplete, DrawingManager, GoogleMap, Polygon, useLoadScript} from "@react-google-maps/api";
-import {Skeleton} from "@nextui-org/skeleton";
 import Notification from "@/app/map/components/Notification";
 
 const mapContainerStyle = {
@@ -55,7 +54,7 @@ function MapComponent() {
         <div>Error loading maps</div>
     );
     if (!isLoaded) return (
-        <Skeleton className="w-[100%] h-[600px]"/>
+        <div>Loading...</div>
     );
 
     const transformCoordinates = (coords) => {
