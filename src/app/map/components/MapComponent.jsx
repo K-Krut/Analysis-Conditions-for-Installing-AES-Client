@@ -18,7 +18,6 @@ function MapComponent() {
 
     const [cropPolygons, setCropPolygons] = useState([]);
     const [cropColor, setCropColor] = useState('green');
-    const [fPolygons, setfPolygons] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [notification, setNotification] = useState('');
     const [map, setMap] = useState(null);
@@ -101,9 +100,6 @@ function MapComponent() {
                     setCropColor('red')
                     setCropPolygons(transformCoordinates(coordinates));
                 }
-                if (data.f && Array.isArray(data.f)) {
-                    setfPolygons(transformCoordinates(data.f));
-                }
             })
             .catch(error => {
                     setIsLoading(false);
@@ -166,7 +162,6 @@ function MapComponent() {
                         </div>
                     )}
                     {renderPolygons(cropPolygons, cropColor)}
-                    {renderPolygons(fPolygons, 'blue')}
                 </GoogleMap>
                 <Notification message={notification} onClose={() => setNotification('')}/>
             </div>
