@@ -43,7 +43,7 @@ function MapComponent() {
         if (place.geometry && map) {
             const center = place.geometry.location;
             map.setCenter(center);
-            map.setZoom(14);
+            map.setZoom(16);
         } else {
             console.log("No details available for input: '" + place.name + "'");
         }
