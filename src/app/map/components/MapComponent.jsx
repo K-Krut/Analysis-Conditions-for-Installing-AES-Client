@@ -1,17 +1,19 @@
-import React, {useState} from 'react';
-import {DrawingManager, GoogleMap, Polygon, useLoadScript} from "@react-google-maps/api";
+import React, {useState, useRef} from 'react';
+import {Autocomplete, DrawingManager, GoogleMap, Polygon, useLoadScript} from "@react-google-maps/api";
 import {Skeleton} from "@nextui-org/skeleton";
 import Notification from "@/app/map/components/Notification";
 
 const mapContainerStyle = {
-    width: '100%', height: '600px'
+    width: '100%',
+    height: '600px',
+    marginBottom: '100px'
 };
 
 const center = {
     lat: 50.330228, lng: 26.239297
 };
 
-const libraries = ['drawing'];
+const libraries = ['places', 'drawing'];
 
 function MapComponent() {
 
@@ -20,10 +22,34 @@ function MapComponent() {
     const [fPolygons, setfPolygons] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [notification, setNotification] = useState('');
+    const [map, setMap] = useState(null);
 
     const {isLoaded, loadError} = useLoadScript({
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY, libraries,
     });
+    const onLoad = React.useCallback(function callback(map) {
+        setMap(map);
+        map.setCenter(new window.google.maps.LatLng(center.lat, center.lng));
+        map.setZoom(14);
+    }, []);
+
+    const onUnmount = React.useCallback(function callback(map) {
+        setMap(null);
+    }, []);
+
+    const onPlaceChanged = () => {
+        const place = autocompleteRef.current.getPlace();
+
+        if (place.geometry && map) {
+            const center = place.geometry.location;
+            map.setCenter(center);
+            map.setZoom(14);
+        } else {
+            console.log("No details available for input: '" + place.name + "'");
+        }
+    };
+
+    const autocompleteRef = useRef(null);
 
     if (loadError) return (
         <div>Error loading maps</div>
@@ -94,11 +120,30 @@ function MapComponent() {
     return (
         <>
             <div className="map-container relative" style={mapContainerStyle}>
+                <Autocomplete
+                    onLoad={ref => autocompleteRef.current = ref}
+                    onPlaceChanged={onPlaceChanged}
+                >
+                    <input
+                        type="text"
+                        placeholder="Search places..."
+                        style={{
+                            width: "300px",
+                            height: "40px",
+                            paddingLeft: "10px",
+                            color: "black",
+                            backgroundColor: "white",
+                            border: "1px solid #ccc"
+                        }}
+                    />
+                </Autocomplete>
                 <GoogleMap
                     mapContainerStyle={mapContainerStyle}
                     center={center}
                     zoom={14}
                     mapTypeId={google.maps.MapTypeId.HYBRID}
+                    onLoad={onLoad}
+                    onUnmount={onUnmount}
                 >
                     <DrawingManager
                         onPolygonComplete={onPolygonComplete}
