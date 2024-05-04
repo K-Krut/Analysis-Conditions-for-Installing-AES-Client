@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {DrawingManager, GoogleMap, Polygon, useLoadScript} from "@react-google-maps/api";
 import {Skeleton} from "@nextui-org/skeleton";
+import Notification from "@/app/map/components/Notification";
 
 const mapContainerStyle = {
     width: '100%', height: '600px'
@@ -18,6 +19,7 @@ function MapComponent() {
     const [cropColor, setCropColor] = useState('green');
     const [fPolygons, setfPolygons] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [notification, setNotification] = useState('');
 
     const {isLoaded, loadError} = useLoadScript({
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY, libraries,
@@ -27,7 +29,7 @@ function MapComponent() {
         <div>Error loading maps</div>
     );
     if (!isLoaded) return (
-        <Skeleton className="w-[100%] h-[600px]" />
+        <Skeleton className="w-[100%] h-[600px]"/>
     );
 
     const transformCoordinates = (coords) => {
@@ -40,6 +42,13 @@ function MapComponent() {
         });
     };
 
+    const showErrorNotification = (error) => {
+        setNotification(error);
+        setTimeout(() => {
+            setNotification('');
+        }, 5000);
+    };
+
     const onPolygonComplete = polygon => {
         setIsLoading(true);
         const coordinates = (polygon.getPath().getArray().map(coord => [coord.lng(), coord.lat()]));
@@ -49,7 +58,12 @@ function MapComponent() {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({coordinates: coordinates})
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Server responded with an error: ' + response.statusText);
+                }
+                return response.json();
+            })
             .then(data => {
                 console.log(data);
                 setIsLoading(false);
@@ -69,40 +83,49 @@ function MapComponent() {
             .catch(error => {
                     setIsLoading(false);
                     console.error('Error:', error);
+                    setNotification(error.message)
+                    polygon.setMap(null);
+                    showErrorNotification(error.message);
+
                 }
             );
     };
 
-    return (<GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        center={center}
-        zoom={14}
-        mapTypeId={google.maps.MapTypeId.HYBRID}
-    >
-        <DrawingManager
-            onPolygonComplete={onPolygonComplete}
-            options={{
-                drawingControl: true, drawingControlOptions: {
-                    position: google.maps.ControlPosition.TOP_CENTER, drawingModes: ['polygon']
-                },
-                polygonOptions: {
-                    fillColor: '#676560',
-                    fillOpacity: 0.7,
-                    strokeWeight: 0.5,
-                    clickable: true,
-                    editable: true,
-                    zIndex: 1
-                }
-            }}
-        />
-        {isLoading && (
-            <div className="loading-overlay">
-                <div className="spinner"></div>
-            </div>
-        )}
-        {renderPolygons(cropPolygons, cropColor)}
-        {renderPolygons(fPolygons, 'blue')}
-    </GoogleMap>);
+    return (
+        <>
+            <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                center={center}
+                zoom={14}
+                mapTypeId={google.maps.MapTypeId.HYBRID}
+            >
+                <DrawingManager
+                    onPolygonComplete={onPolygonComplete}
+                    options={{
+                        drawingControl: true, drawingControlOptions: {
+                            position: google.maps.ControlPosition.TOP_CENTER, drawingModes: ['polygon']
+                        },
+                        polygonOptions: {
+                            fillColor: '#676560',
+                            fillOpacity: 0.7,
+                            strokeWeight: 1,
+                            clickable: true,
+                            editable: true,
+                            zIndex: 1
+                        }
+                    }}
+                />
+                {isLoading && (
+                    <div className="loading-overlay">
+                        <div className="spinner"></div>
+                    </div>
+                )}
+                {renderPolygons(cropPolygons, cropColor)}
+                {renderPolygons(fPolygons, 'blue')}
+            </GoogleMap>
+            <Notification message={notification} onClose={() => setNotification('')} />
+        </>
+    );
 
     function renderPolygons(polygons, color) {
         if (Array.isArray(polygons[0])) {
