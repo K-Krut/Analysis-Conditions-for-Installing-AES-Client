@@ -93,37 +93,39 @@ function MapComponent() {
 
     return (
         <>
-            <GoogleMap
-                mapContainerStyle={mapContainerStyle}
-                center={center}
-                zoom={14}
-                mapTypeId={google.maps.MapTypeId.HYBRID}
-            >
-                <DrawingManager
-                    onPolygonComplete={onPolygonComplete}
-                    options={{
-                        drawingControl: true, drawingControlOptions: {
-                            position: google.maps.ControlPosition.TOP_CENTER, drawingModes: ['polygon']
-                        },
-                        polygonOptions: {
-                            fillColor: '#676560',
-                            fillOpacity: 0.7,
-                            strokeWeight: 1,
-                            clickable: true,
-                            editable: true,
-                            zIndex: 1
-                        }
-                    }}
-                />
-                {isLoading && (
-                    <div className="loading-overlay">
-                        <div className="spinner"></div>
-                    </div>
-                )}
-                {renderPolygons(cropPolygons, cropColor)}
-                {renderPolygons(fPolygons, 'blue')}
-            </GoogleMap>
-            <Notification message={notification} onClose={() => setNotification('')} />
+            <div className="map-container relative" style={mapContainerStyle}>
+                <GoogleMap
+                    mapContainerStyle={mapContainerStyle}
+                    center={center}
+                    zoom={14}
+                    mapTypeId={google.maps.MapTypeId.HYBRID}
+                >
+                    <DrawingManager
+                        onPolygonComplete={onPolygonComplete}
+                        options={{
+                            drawingControl: true, drawingControlOptions: {
+                                position: google.maps.ControlPosition.TOP_CENTER, drawingModes: ['polygon']
+                            },
+                            polygonOptions: {
+                                fillColor: '#676560',
+                                fillOpacity: 0.7,
+                                strokeWeight: 1,
+                                clickable: true,
+                                editable: true,
+                                zIndex: 1
+                            }
+                        }}
+                    />
+                    {isLoading && (
+                        <div className="loading-overlay">
+                            <div className="spinner"></div>
+                        </div>
+                    )}
+                    {renderPolygons(cropPolygons, cropColor)}
+                    {renderPolygons(fPolygons, 'blue')}
+                </GoogleMap>
+                <Notification message={notification} onClose={() => setNotification('')}/>
+            </div>
         </>
     );
 

@@ -1,19 +1,21 @@
-const Notification = ({ message, onClose }) => {
+const Notification = ({message, onClose}) => {
     if (!message) return null;
 
     return (
         <div style={{
-            position: 'fixed',
-            bottom: '20px',
-            left: '20px',
-            backgroundColor: 'rgba(0,0,0,0.7)',
+            position: 'absolute',
+            bottom: '10px',
+            left: '10px',
+            backgroundColor: '#070707',
+            opacity: 1,
             color: 'white',
             padding: '10px',
             borderRadius: '5px',
             zIndex: 1000
         }}>
-            {message}
-            <button onClick={onClose} style={{ marginLeft: '10px', color: 'white' }}>Close</button>
+            <span style={{ marginRight: '10px' }}>⚠️</span>{message}
+            <br></br>
+            <button onClick={onClose} style={{marginLeft: '10px', color: 'white'}}>Close</button>
         </div>
     );
 };
