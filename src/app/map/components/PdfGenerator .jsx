@@ -6,9 +6,12 @@ import {generateLandscapeStatsTable, generateLandTypesTable} from '../../utils/m
 
 
 function formatCoordinates(coords) {
+    if (coords.length === 0) {
+        return "[]";
+    }
     return `[\n${coords.map(point =>
-        `    [${point[0]}, ${point[1]}]`
-    ).join(',\n')}\n]` ? coords : `[]`;
+        `    [${point[0]}, ${point[1]}]` 
+    ).join(',\n')}\n]`;
 }
 
 function setTextForDoc(doc, x, y, fontSize=12, fontName='times', fontStyle='normal', textOptions={}, text) {
@@ -36,7 +39,7 @@ const PdfGenerator = ({data, triggerDownload}) => {
 
         setTextForDoc(doc,10, 40, 10, 'times', 'normal', {}, coordsText)
 
-        let startY = doc.getTextDimensions(coordsText).h + 60;
+        let startY = 50 + (10 * data.coordinates.length / 2);
 
         if (startY > 280) {
             doc.addPage();
