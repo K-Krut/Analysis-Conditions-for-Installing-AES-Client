@@ -161,10 +161,11 @@ function generateLandTypesTable(arr=landscape_types_details) {
         item.suitable ? "Yes" : "No"
     ])
 }
-function setTextForDoc(doc, textX, textY, text, font={name: 'times', style: 'normal', size: 12}, textOptions={}) {
-    doc.setFontSize(font.size);
-    doc.setFont(font.name, font.style);
-    doc.text(text, textX, textY, textOptions);
+
+function setTextForDoc(doc, x, y, fontSize=12, fontName='times', fontStyle='normal', textOptions={}, text) {
+    doc.setFontSize(fontSize);
+    doc.setFont(fontName, fontStyle);
+    doc.text(text, x, y, textOptions);
 }
 
 const PdfGenerator = ({data, triggerDownload}) => {
@@ -175,38 +176,33 @@ const PdfGenerator = ({data, triggerDownload}) => {
     const generatePdf = () => {
         const doc = new jsPDF();
 
-        doc.setFontSize(16);
-        doc.setFont('times', 'bold');
-        doc.text('Landscape Analysis Report', 105, 20, {align: 'center'});
+        setTextForDoc(doc,105, 20, 12, 'times', 'normal', {align: 'center'},
+            'Landscape Analysis Report')
 
-        doc.setFontSize(12);
-        doc.setFont('times', 'bold');
-        doc.text('Your Polygon', 10, 30);
+        setTextForDoc(doc,10, 30, 12, 'times', 'bold', {},
+            'Your Polygon')
 
-        doc.setFontSize(10);
-        doc.setFont('times', 'normal');
-        doc.text(`Coordinates: ${data.coordinates}`, 10, 60);
+        setTextForDoc(doc,10, 60, 10, 'times', 'normal', {},
+            `Coordinates: ${data.coordinates}`)
 
-        doc.setFontSize(12);
-        doc.setFont('times', 'bold');
-        doc.text('Your Polygon Landscape Types Classification', 10, 50);
+        setTextForDoc(doc,10, 70, 12, 'times', 'bold', {},
+            'Your Polygon Landscape Types Classification')
 
-        // doc.setFontSize(10);
-        // doc.setFont('times', 'normal');
-        doc.text('This document describes the specifications of the land cover data products.', 10, 60);
+        setTextForDoc(doc,10, 80, 10, 'times', 'normal', {},
+            'This document describes the specifications of the land cover data products.')
 
         doc.autoTable({
             head: [['Type', 'Type ID', 'Area km²', 'Percentage %']],
             body: generateLandscapeStatsTable(data.area),
-            startY: 70,
+            startY: 90,
         });
 
+        /**************************************************************************************************************/
 
         doc.addPage();
 
-        doc.setFontSize(12);
-        doc.setFont('times', 'bold');
-        doc.text('Landscape Types', 10, 30);
+        setTextForDoc(doc,10, 30, 12, 'times', 'bold', {},
+            'Landscape Types')
 
         doc.autoTable({
             head: [['ID', 'Name', 'Description', 'Suitable']],
@@ -214,8 +210,8 @@ const PdfGenerator = ({data, triggerDownload}) => {
             startY: 40,
         });
 
-        doc.setFontSize(10);
-        doc.text('Date of Generation', 10, doc.internal.pageSize.getHeight() - 10);
+        setTextForDoc(doc,10, doc.internal.pageSize.getHeight() - 10, 10, 'times', 'bold', {},
+            `Date of Generation: ${7}`)
 
         doc.save(`report-${uuidv4()}.pdf`);
     };
