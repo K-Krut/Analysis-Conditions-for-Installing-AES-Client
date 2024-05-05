@@ -168,6 +168,12 @@ function setTextForDoc(doc, x, y, fontSize=12, fontName='times', fontStyle='norm
     doc.text(text, x, y, textOptions);
 }
 
+function formatCoordinates(coords) {
+    return `[\n${coords.map(coord =>
+        `    [${coord[0]}, ${coord[1]}]`
+    ).join(',\n')}\n]`;
+}
+
 const PdfGenerator = ({data, triggerDownload}) => {
     if (!triggerDownload) {
         return null;
@@ -176,25 +182,33 @@ const PdfGenerator = ({data, triggerDownload}) => {
     const generatePdf = () => {
         const doc = new jsPDF();
 
-        setTextForDoc(doc,105, 20, 12, 'times', 'normal', {align: 'center'},
+        setTextForDoc(doc,105, 20, 16, 'times', 'bold', {align: 'center'},
             'Landscape Analysis Report')
 
         setTextForDoc(doc,10, 30, 12, 'times', 'bold', {},
             'Your Polygon')
 
-        setTextForDoc(doc,10, 60, 10, 'times', 'normal', {},
-            `Coordinates: ${data.coordinates}`)
+        const coordsText = `Coordinates:\n${formatCoordinates(data.coordinates)}`;
 
-        setTextForDoc(doc,10, 70, 12, 'times', 'bold', {},
+        setTextForDoc(doc,10, 40, 10, 'times', 'normal', {}, coordsText)
+
+        let startY = doc.getTextDimensions(coordsText).h + 60;
+
+        if (startY > 280) {
+            doc.addPage();
+            startY = 10;
+        }
+
+        setTextForDoc(doc,10, startY + 10, 12, 'times', 'bold', {},
             'Your Polygon Landscape Types Classification')
 
-        setTextForDoc(doc,10, 80, 10, 'times', 'normal', {},
+        setTextForDoc(doc,10, startY + 20, 10, 'times', 'normal', {},
             'This document describes the specifications of the land cover data products.')
 
         doc.autoTable({
             head: [['Type', 'Type ID', 'Area km²', 'Percentage %']],
             body: generateLandscapeStatsTable(data.area),
-            startY: 90,
+            startY: startY + 30,
         });
 
         /**************************************************************************************************************/
