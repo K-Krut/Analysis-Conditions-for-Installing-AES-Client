@@ -1,5 +1,6 @@
 import React, {useState, useRef} from 'react';
 import {Autocomplete, DrawingManager, GoogleMap, Polygon, useLoadScript} from "@react-google-maps/api";
+import {Skeleton} from "@nextui-org/skeleton";
 import Notification from "@/app/map/components/Notification";
 import PdfGenerator from "@/app/map/components/PdfGenerator ";
 
@@ -57,7 +58,7 @@ function MapComponent() {
         <div>Error loading maps</div>
     );
     if (!isLoaded) return (
-        <div>Loading...</div>
+        <Skeleton className="w-[100%] h-[600px]"/>
     );
 
     const transformCoordinates = (coords) => {
@@ -78,6 +79,7 @@ function MapComponent() {
     };
 
     const onPolygonComplete = polygon => {
+        polygon.setMap(null);
         setResponseData(null);
         setTriggerDownload(false);
         setIsLoading(true);
@@ -90,21 +92,23 @@ function MapComponent() {
         })
             .then(response => {
                 if (!response.ok) {
-                    // throw new Error(response.error.message);
                     throw new Error('Server responded with an error: ' + response.statusText);
                 }
                 return response.json();
             })
             .then(data => {
                 console.log(data);
-                setResponseData(null);
                 setIsLoading(false);
                 polygon.setMap(null);
                 if (data.crop && Array.isArray(data.crop) && data.crop.length > 0) {
+                    console.log('if (data.crop && Array.isArray(data.crop) && data.crop.length > 0) {')
                     setCropColor('green')
+                    console.log(transformCoordinates(data.crop))
                     setCropPolygons(transformCoordinates(data.crop));
+                    console.log(cropPolygons, cropColor)
                 }
                 if (Array.isArray(data.crop) && data.crop.length === 0) {
+                    console.log(' if (Array.isArray(data.crop) && data.crop.length === 0) {')
                     setCropColor('red')
                     setCropPolygons(transformCoordinates(coordinates));
                 }
