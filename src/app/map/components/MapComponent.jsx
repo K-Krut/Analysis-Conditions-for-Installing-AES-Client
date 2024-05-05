@@ -1,6 +1,7 @@
 import React, {useState, useRef} from 'react';
 import {Autocomplete, DrawingManager, GoogleMap, Polygon, useLoadScript} from "@react-google-maps/api";
 import Notification from "@/app/map/components/Notification";
+import PdfGenerator from "@/app/map/components/PdfGenerator ";
 
 const mapContainerStyle = {
     width: '100%',
@@ -21,6 +22,9 @@ function MapComponent() {
     const [isLoading, setIsLoading] = useState(false);
     const [notification, setNotification] = useState('');
     const [map, setMap] = useState(null);
+    const [triggerDownload, setTriggerDownload] = useState(false);
+    const [responseData, setResponseData] = useState(null);
+
 
     const {isLoaded, loadError} = useLoadScript({
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY, libraries,
@@ -74,6 +78,7 @@ function MapComponent() {
     };
 
     const onPolygonComplete = polygon => {
+        setTriggerDownload(false);
         setIsLoading(true);
         const coordinates = (polygon.getPath().getArray().map(coord => [coord.lng(), coord.lat()]));
         console.log(coordinates)
@@ -100,8 +105,11 @@ function MapComponent() {
                     setCropColor('red')
                     setCropPolygons(transformCoordinates(coordinates));
                 }
+                setResponseData(data);
+                setTriggerDownload(true);
             })
             .catch(error => {
+                    setTriggerDownload(false);
                     setIsLoading(false);
                     console.error('Error:', error);
                     setNotification(error.message)
@@ -165,6 +173,9 @@ function MapComponent() {
                 </GoogleMap>
                 <Notification message={notification} onClose={() => setNotification('')}/>
             </div>
+            {triggerDownload && (
+                <PdfGenerator data={responseData} triggerDownload={triggerDownload} />
+            )}
         </>
     );
 
