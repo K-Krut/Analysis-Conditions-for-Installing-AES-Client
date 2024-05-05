@@ -78,6 +78,7 @@ function MapComponent() {
     };
 
     const onPolygonComplete = polygon => {
+        setResponseData(null);
         setTriggerDownload(false);
         setIsLoading(true);
         const coordinates = (polygon.getPath().getArray().map(coord => [coord.lng(), coord.lat()]));
@@ -89,12 +90,14 @@ function MapComponent() {
         })
             .then(response => {
                 if (!response.ok) {
+                    // throw new Error(response.error.message);
                     throw new Error('Server responded with an error: ' + response.statusText);
                 }
                 return response.json();
             })
             .then(data => {
                 console.log(data);
+                setResponseData(null);
                 setIsLoading(false);
                 polygon.setMap(null);
                 if (data.crop && Array.isArray(data.crop) && data.crop.length > 0) {
@@ -109,13 +112,13 @@ function MapComponent() {
                 setTriggerDownload(true);
             })
             .catch(error => {
+                    setResponseData(null);
                     setTriggerDownload(false);
                     setIsLoading(false);
                     console.error('Error:', error);
                     setNotification(error.message)
                     polygon.setMap(null);
                     showErrorNotification(error.message);
-
                 }
             );
     };

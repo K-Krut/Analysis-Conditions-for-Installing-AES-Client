@@ -6,12 +6,15 @@ import {generateLandscapeStatsTable, generateLandTypesTable} from '../../utils/m
 
 
 function formatCoordinates(coords) {
-    if (coords.length === 0) {
-        return "[]";
+    const groupedCoords = [];
+    for (let i = 0; i < coords.length; i += 2) {
+        if (coords[i + 1]) {
+            groupedCoords.push(`    [${coords[i][0]}, ${coords[i][1]}], [${coords[i + 1][0]}, ${coords[i + 1][1]}]`);
+        } else {
+            groupedCoords.push(`    [${coords[i][0]}, ${coords[i][1]}]`);
+        }
     }
-    return `[\n${coords.map(point =>
-        `    [${point[0]}, ${point[1]}]` 
-    ).join(',\n')}\n]`;
+    return `[\n${groupedCoords.join(',\n')}\n]`;
 }
 
 function setTextForDoc(doc, x, y, fontSize=12, fontName='times', fontStyle='normal', textOptions={}, text) {
