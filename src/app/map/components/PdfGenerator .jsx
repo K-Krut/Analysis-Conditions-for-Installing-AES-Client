@@ -11,8 +11,11 @@ import {
 
 
 function formatCoordinates(coords) {
+    if (!Array.isArray(coords)) {
+        return '[]';
+    }
     const groupedCoords = [];
-    for (let i = 0; i < coords.length; i += 2) {
+    for (let i = 0; i < coords?.length; i += 2) {
         if (coords[i + 1]) {
             groupedCoords.push(`    [${coords[i][0]}, ${coords[i][1]}], [${coords[i + 1][0]}, ${coords[i + 1][1]}]`);
         } else {
@@ -76,9 +79,9 @@ const PdfGenerator = ({data, triggerDownload}) => {
 
         setTextForDoc(doc, 10, 40, 10, 'times', 'normal', {}, coordsText)
 
-        startY = 50 + (10 * data.coordinates.length / 2);
+        startY = 50 + (10 * data?.coordinates?.length / 2) ? data?.coordinates?.length : 0;
 
-        if (data.suitable_polygon_area) {
+        if (data.suitable_polygon_area !== undefined) {
             setTextForDoc(doc, 10, defineY(doc), 10, 'times', 'normal', {},
                 `Your polygon area: ${data.initial_polygon_area.toFixed(5)} km²`)
         }
@@ -88,7 +91,7 @@ const PdfGenerator = ({data, triggerDownload}) => {
 
         setTextForDoc(doc, 10, defineY(doc), 10, 'times', 'normal', {},
             'This document describes the specifications of the land cover data products.')
-        if (data.area && data.area !== []) {
+        if (data.area && Array.isArray(data.area )) {
             doc.autoTable({
                 head: [['Type', 'Type ID', 'Area km²', 'Percentage %']],
                 body: generateLandscapeStatsTable(data.area),
@@ -106,12 +109,13 @@ const PdfGenerator = ({data, triggerDownload}) => {
         setTextForDoc(doc, 10, defineY(doc, 10, true), 12, 'times', 'bold', {},
             'Suitable Territory Polygon')
 
-        if (data.crop && data.crop.length > 0) {
+        if (data.crop && Array.isArray(data.crop)) {
             const suitableCoordsText = `Coordinates:\n${formatCoordinates(data.crop)}`;
 
             setTextForDoc(doc, 10, defineY(doc), 10, 'times', 'normal', {}, suitableCoordsText)
             if (data.suitable_polygon_area) {
-                setTextForDoc(doc, 10, defineY(doc, 10 + (10 * data.crop.length / 2)), 10, 'times', 'normal', {},
+                let y = (10 + (10 * data?.crop?.length / 2)) ? data?.crop?.length : 10
+                setTextForDoc(doc, 10, defineY(doc, y), 10, 'times', 'normal', {},
                     `Suitable polygon area: ${data.suitable_polygon_area.toFixed(5)} km²`)
             }
         } else {
@@ -134,21 +138,21 @@ const PdfGenerator = ({data, triggerDownload}) => {
         setTextForDoc(doc, 10, defineY(doc, 5), 10, 'times', 'normal', {},
             'Detailed information on the calculations can be found in the document on the following pages.')
 
-        if (data.energy_output_stats.panels) {
+        if (data?.energy_output_stats?.panels) {
             setTextForDoc(doc, 10, defineY(doc), 10, 'times', 'normal', {},
-                `Number of Solar Panels can be installed: ${data.energy_output_stats.panels}`)
+                `Number of Solar Panels can be installed: ${data?.energy_output_stats?.panels ? data?.energy_output_stats?.panels : 0}`)
         }
 
-        if (data.energy_output_stats.panels_area) {
+        if (data?.energy_output_stats?.panels_area) {
             setTextForDoc(doc, 10, defineY(doc), 10, 'times', 'normal', {},
-                `Solar Panels Area: ${data.energy_output_stats.panels_area.toFixed(2)} m²`)
+                `Solar Panels Area: ${data?.energy_output_stats?.panels_area.toFixed(2)} m²`)
         }
 
-        if (data.energy_output_stats && data.energy_output_stats !== {}) {
-            if (data.energy_output_stats.month_energy_stats && data.energy_output_stats.month_energy_stats !== []) {
+        if (data?.energy_output_stats && data?.energy_output_stats !== {}) {
+            if (data?.energy_output_stats?.month_energy_stats && data?.energy_output_stats?.month_energy_stats !== []) {
                 doc.autoTable({
                     head: [['Month', 'Output kWt',]],
-                    body: generateEnergyOutputTable(data.energy_output_stats.month_energy_stats, data.energy_output_stats.yearly_energy),
+                    body: generateEnergyOutputTable(data?.energy_output_stats?.month_energy_stats, data?.energy_output_stats?.yearly_energy),
                     startY: defineY(doc),
                 });
             }

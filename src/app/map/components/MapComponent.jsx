@@ -25,6 +25,7 @@ function MapComponent() {
     const [map, setMap] = useState(null);
     const [triggerDownload, setTriggerDownload] = useState(false);
     const [responseData, setResponseData] = useState(null);
+    const [apiResponseText, setApiResponseText] = useState('');
 
 
     const {isLoaded, loadError} = useLoadScript({
@@ -78,6 +79,14 @@ function MapComponent() {
         }, 5000);
     };
 
+    const handleApiResponse = (data) => {
+        setApiResponseText('');
+        setTimeout(() => {
+            setApiResponseText(data);
+        }, 100);
+    }
+
+
     const onPolygonComplete = polygon => {
         polygon.setMap(null);
         setResponseData(null);
@@ -100,18 +109,15 @@ function MapComponent() {
                 console.log(data);
                 setIsLoading(false);
                 polygon.setMap(null);
-                if (data.crop && Array.isArray(data.crop) && data.crop.length > 0) {
-                    console.log('if (data.crop && Array.isArray(data.crop) && data.crop.length > 0) {')
+                if (data?.crop && Array.isArray(data?.crop) && data?.crop?.length > 0) {
                     setCropColor('green')
-                    console.log(transformCoordinates(data.crop))
-                    setCropPolygons(transformCoordinates(data.crop));
-                    console.log(cropPolygons, cropColor)
+                    setCropPolygons(transformCoordinates(data?.crop));
                 }
-                if (Array.isArray(data.crop) && data.crop.length === 0) {
-                    console.log(' if (Array.isArray(data.crop) && data.crop.length === 0) {')
+                if (Array.isArray(data?.crop) && data?.crop?.length === 0) {
                     setCropColor('red')
                     setCropPolygons(transformCoordinates(coordinates));
                 }
+                handleApiResponse(data);
                 setResponseData(data);
                 setTriggerDownload(true);
             })
@@ -179,7 +185,18 @@ function MapComponent() {
                     {renderPolygons(cropPolygons, cropColor)}
                 </GoogleMap>
                 <Notification message={notification} onClose={() => setNotification('')}/>
+
+                <div className="api-response-container">
+                    {isLoading ? (
+                        <div className="spinner"></div>
+                    ) : (
+                        <div className={apiResponseText ? 'api-response-visible' : ''}>
+                            {apiResponseText}
+                        </div>
+                    )}
+                </div>
             </div>
+
             {triggerDownload && (
                 <PdfGenerator data={responseData} triggerDownload={triggerDownload} />
             )}
