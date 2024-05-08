@@ -143,7 +143,7 @@ export function generateLandscapeStatsTable(arr) {
     return arr.map(item => [
         item.name,
         item.id,
-        item.area.toFixed(5),
+        item.area.toFixed(5).toLocaleString('en-US'),
         item.percentage.toFixed(0)
     ]);
 }
@@ -160,7 +160,7 @@ export function generateLandTypesTable(arr=landscape_types_details) {
 export function generateEnergyOutputTable(data, year) {
     let months =  data.map(item => [
         new Date(item.date).toLocaleString('en-US', { month: 'long' }),
-        item.energy
+        item.energy.toLocaleString('en-US')
     ])
-    return [...months, ...[["Sum", year]]]
+    return [...months, ...[["Sum", year.toLocaleString('en-US')]]]
 }
