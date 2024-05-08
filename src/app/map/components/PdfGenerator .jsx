@@ -23,6 +23,23 @@ function setTextForDoc(doc, x, y, fontSize=12, fontName='times', fontStyle='norm
     doc.text(text, x, y, textOptions);
 }
 
+let startY = 0;
+
+function defineY(doc, add_y=10, new_page=false) {
+    if (new_page) {
+        doc.addPage();
+        startY = 10;
+    } else {
+        let y = startY + add_y
+        if (y > 280) {
+            doc.addPage();
+            startY = 10;
+        } else {
+            startY = y
+        }
+    }
+    return startY
+}
 
 const PdfGenerator = ({data, triggerDownload}) => {
     if (!triggerDownload) {
@@ -42,24 +59,45 @@ const PdfGenerator = ({data, triggerDownload}) => {
 
         setTextForDoc(doc,10, 40, 10, 'times', 'normal', {}, coordsText)
 
-        let startY = 50 + (10 * data.coordinates.length / 2);
+        startY = 50 + (10 * data.coordinates.length / 2);
 
-        if (startY > 280) {
-            doc.addPage();
-            startY = 10;
-        }
-
-        setTextForDoc(doc,10, startY + 10, 12, 'times', 'bold', {},
+        setTextForDoc(doc,10, defineY(doc), 12, 'times', 'bold', {},
             'Your Polygon Landscape Types Classification')
 
-        setTextForDoc(doc,10, startY + 20, 10, 'times', 'normal', {},
+        setTextForDoc(doc,10, defineY(doc), 10, 'times', 'normal', {},
             'This document describes the specifications of the land cover data products.')
 
         doc.autoTable({
             head: [['Type', 'Type ID', 'Area km²', 'Percentage %']],
             body: generateLandscapeStatsTable(data.area),
-            startY: startY + 30,
+            startY: defineY(doc),
         });
+
+        /***************************************/
+
+        defineY(doc, 20)
+
+        setTextForDoc(doc,10, defineY(doc, 10, true), 12, 'times', 'bold', {},
+            'Suitable Territory Polygon')
+
+        const suitableCoordsText = `Coordinates:\n${formatCoordinates(data.crop)}`;
+
+        setTextForDoc(doc,10, defineY(doc, 10), 10, 'times', 'normal', {}, suitableCoordsText)
+
+
+        /**************************************************************************************************************/
+
+        // doc.addPage();
+        //
+        // setTextForDoc(doc,10, 30, 12, 'times', 'bold', {},
+        //     'Landscape Types')
+        //
+        // doc.autoTable({
+        //     head: [['ID', 'Name', 'Description', 'Suitable']],
+        //     body: generateLandTypesTable(),
+        //     startY: 40,
+        // });
+
 
         /**************************************************************************************************************/
 
@@ -73,6 +111,11 @@ const PdfGenerator = ({data, triggerDownload}) => {
             body: generateLandTypesTable(),
             startY: 40,
         });
+
+
+
+        /**************************************************************************************************************/
+
 
         setTextForDoc(doc,10, doc.internal.pageSize.getHeight() - 10, 10, 'times', 'bold', {},
             `Date of Generation: ${7}`)

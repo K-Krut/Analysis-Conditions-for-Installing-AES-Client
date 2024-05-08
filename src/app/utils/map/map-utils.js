@@ -144,7 +144,7 @@ export function generateLandscapeStatsTable(arr) {
         item.name,
         item.id,
         item.area.toFixed(3),
-        item.percentage.toFixed(2)
+        item.percentage.toFixed(0)
     ]);
 }
 
