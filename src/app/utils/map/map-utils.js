@@ -143,7 +143,7 @@ export function generateLandscapeStatsTable(arr) {
     return arr.map(item => [
         item.name,
         item.id,
-        item.area.toFixed(3),
+        item.area.toFixed(5),
         item.percentage.toFixed(0)
     ]);
 }
@@ -155,4 +155,12 @@ export function generateLandTypesTable(arr=landscape_types_details) {
         item.details,
         item.suitable ? "Yes" : "No"
     ])
+}
+
+export function generateEnergyOutputTable(data, year) {
+    let months =  data.map(item => [
+        new Date(item.date).toLocaleString('en-US', { month: 'long' }),
+        item.energy
+    ])
+    return [...months, ...[["Sum", year]]]
 }
