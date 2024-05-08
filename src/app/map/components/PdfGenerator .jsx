@@ -5,7 +5,8 @@ import {v4 as uuidv4} from 'uuid';
 import {
     generateEnergyOutputTable,
     generateLandscapeStatsTable,
-    generateLandTypesTable
+    generateLandTypesTable,
+    ENERGY_OUTPUT_FORMULA_EN
 } from '../../utils/map/map-utils.js'
 
 
@@ -52,6 +53,18 @@ const PdfGenerator = ({data, triggerDownload}) => {
 
     const generatePdf = () => {
         const doc = new jsPDF();
+
+
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        doc.setFont('times', 'bold');
+        doc.setFontSize(22);
+        doc.text('Landscape Analysis Report', pageWidth / 2, pageHeight / 2, { align: 'center' });
+
+        /**************************************************************************************************************/
+
+        doc.addPage();
 
         setTextForDoc(doc, 105, 20, 16, 'times', 'bold', {align: 'center'},
             'Landscape Analysis Report')
@@ -152,37 +165,7 @@ const PdfGenerator = ({data, triggerDownload}) => {
             'Energy Output Formula')
 
         setTextForDoc(doc, 10, defineY(doc, 10), 10, 'times', 'normal', {},
-            `The global formula to estimate the electricity generated in output of a photovoltaic system is:
-
-           E = A * r * H * PR
-
-            E = Energy (kWh)
-            A = Total solar panel Area (m2)
-            r = solar panel yield or efficiency(%) 
-            H = Annual average solar radiation on tilted panels (shadings not included)
-            PR = Performance ratio, coefficient for losses (range between 0.5 and 0.9, default value = 0.75)
-            
-    r is the yield of the solar panel given by the ratio : electrical power (in kWp) of one solar panel divided by the area of one panel.
-    The unit of the nominal power of the photovoltaic panel in these conditions is called "Watt-peak"
-    (Wp or kWp=1000 Wp or MWp=1000000 Wp).
-    
-    H  is the annual average solar radiation on tilted panels. 
-    
-    PR : PR (Performance Ratio) is a very important value to evaluate the quality of a photovoltaic installation because it gives 
-    the performance of the installation independently of the orientation, inclination of the panel. It includes all losses.
-    
-    ------------------------------
-    
-    Please note:
-    We take as standard in our calculations 
-    the PV module 250 Wp with an area of 1.6 m2 and 15.6% solar panel yield.
-    Also what is the peculiarity of our calculations:
-        - we use the above formula to calculate first the output for each month of the year and then the total for the
-            whole year. In this case H is the average solar radiation for the month, which we use for the weather conditions of your polygon. 
-        - we pay special attention to the calculation of PR value and in its calculation we take into account losses 
-            caused by temperature, wind speed and precipitation, which we calculate on the basis of statistical weather data of your polygon.
-    
-    ------------------------------`)
+            ENERGY_OUTPUT_FORMULA_EN)
 
         /**************************************************************************************************************/
 
