@@ -1,6 +1,8 @@
 import React, {useState, useRef} from 'react';
 import {Autocomplete, DrawingManager, GoogleMap, Polygon, useLoadScript} from "@react-google-maps/api";
+import {Skeleton} from "@nextui-org/skeleton";
 import Notification from "@/app/map/components/Notification";
+import PdfGenerator from "@/app/map/components/PdfGenerator ";
 
 const mapContainerStyle = {
     width: '100%',
@@ -21,6 +23,9 @@ function MapComponent() {
     const [isLoading, setIsLoading] = useState(false);
     const [notification, setNotification] = useState('');
     const [map, setMap] = useState(null);
+    const [triggerDownload, setTriggerDownload] = useState(false);
+    const [responseData, setResponseData] = useState(null);
+
 
     const {isLoaded, loadError} = useLoadScript({
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY, libraries,
@@ -53,7 +58,7 @@ function MapComponent() {
         <div>Error loading maps</div>
     );
     if (!isLoaded) return (
-        <div>Loading...</div>
+        <Skeleton className="w-[100%] h-[600px]"/>
     );
 
     const transformCoordinates = (coords) => {
@@ -74,6 +79,9 @@ function MapComponent() {
     };
 
     const onPolygonComplete = polygon => {
+        polygon.setMap(null);
+        setResponseData(null);
+        setTriggerDownload(false);
         setIsLoading(true);
         const coordinates = (polygon.getPath().getArray().map(coord => [coord.lng(), coord.lat()]));
         console.log(coordinates)
@@ -92,22 +100,25 @@ function MapComponent() {
                 console.log(data);
                 setIsLoading(false);
                 polygon.setMap(null);
-                if (data.crop && Array.isArray(data.crop) && data.crop.length > 0) {
+                if (data?.crop && Array.isArray(data?.crop) && data?.crop?.length > 0) {
                     setCropColor('green')
-                    setCropPolygons(transformCoordinates(data.crop));
+                    setCropPolygons(transformCoordinates(data?.crop));
                 }
-                if (Array.isArray(data.crop) && data.crop.length === 0) {
+                if (Array.isArray(data?.crop) && data?.crop?.length === 0) {
                     setCropColor('red')
                     setCropPolygons(transformCoordinates(coordinates));
                 }
+                setResponseData(data);
+                setTriggerDownload(true);
             })
             .catch(error => {
+                    setResponseData(null);
+                    setTriggerDownload(false);
                     setIsLoading(false);
                     console.error('Error:', error);
                     setNotification(error.message)
                     polygon.setMap(null);
                     showErrorNotification(error.message);
-
                 }
             );
     };
@@ -165,6 +176,10 @@ function MapComponent() {
                 </GoogleMap>
                 <Notification message={notification} onClose={() => setNotification('')}/>
             </div>
+
+            {triggerDownload && (
+                <PdfGenerator data={responseData} triggerDownload={triggerDownload} />
+            )}
         </>
     );
 
