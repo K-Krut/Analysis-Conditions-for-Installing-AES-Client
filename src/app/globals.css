@@ -52,18 +52,18 @@ body {
   100% { transform: rotate(360deg); }
 }
 
-.api-response-container {
-  padding: 20px;
-  margin-top: 20px;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  max-width: 600px;
-  min-height: 50px;
-  opacity: 0;
-  transition: opacity 2s ease-in-out;
-}
+/*.api-response-container {*/
+/*  padding: 20px;*/
+/*  margin-top: 20px;*/
+/*  background-color: white;*/
+/*  border: 1px solid #ccc;*/
+/*  border-radius: 8px;*/
+/*  max-width: 600px;*/
+/*  min-height: 50px;*/
+/*  opacity: 0;*/
+/*  transition: opacity 2s ease-in-out;*/
+/*}*/
 
-.api-response-visible {
-  opacity: 1;
-}
+/*.api-response-visible {*/
+/*  opacity: 1;*/
+/*}*/

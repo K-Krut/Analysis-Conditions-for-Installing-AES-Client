@@ -25,7 +25,6 @@ function MapComponent() {
     const [map, setMap] = useState(null);
     const [triggerDownload, setTriggerDownload] = useState(false);
     const [responseData, setResponseData] = useState(null);
-    const [apiResponseText, setApiResponseText] = useState('');
 
 
     const {isLoaded, loadError} = useLoadScript({
@@ -79,14 +78,6 @@ function MapComponent() {
         }, 5000);
     };
 
-    const handleApiResponse = (data) => {
-        setApiResponseText('');
-        setTimeout(() => {
-            setApiResponseText(data);
-        }, 100);
-    }
-
-
     const onPolygonComplete = polygon => {
         polygon.setMap(null);
         setResponseData(null);
@@ -117,7 +108,6 @@ function MapComponent() {
                     setCropColor('red')
                     setCropPolygons(transformCoordinates(coordinates));
                 }
-                handleApiResponse(data);
                 setResponseData(data);
                 setTriggerDownload(true);
             })
@@ -185,16 +175,6 @@ function MapComponent() {
                     {renderPolygons(cropPolygons, cropColor)}
                 </GoogleMap>
                 <Notification message={notification} onClose={() => setNotification('')}/>
-
-                <div className="api-response-container">
-                    {isLoading ? (
-                        <div className="spinner"></div>
-                    ) : (
-                        <div className={apiResponseText ? 'api-response-visible' : ''}>
-                            {apiResponseText}
-                        </div>
-                    )}
-                </div>
             </div>
 
             {triggerDownload && (
