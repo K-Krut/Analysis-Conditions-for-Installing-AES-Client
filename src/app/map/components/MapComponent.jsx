@@ -1,8 +1,9 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {Autocomplete, DrawingManager, GoogleMap, Polygon, useLoadScript} from "@react-google-maps/api";
 import {Skeleton} from "@nextui-org/skeleton";
 import Notification from "@/app/map/components/Notification";
 import PdfGenerator from "@/app/map/components/PdfGenerator ";
+import CursorSVG from "@/app/map/components/CursorSVG";
 
 const mapContainerStyle = {
     width: '100%',
@@ -25,6 +26,11 @@ function MapComponent() {
     const [map, setMap] = useState(null);
     const [triggerDownload, setTriggerDownload] = useState(false);
     const [responseData, setResponseData] = useState(null);
+
+
+    const [displayResponse, setDisplayResponse] = useState('');
+    const [completedTyping, setCompletedTyping] = useState(true);
+
 
 
     const {isLoaded, loadError} = useLoadScript({
@@ -53,6 +59,28 @@ function MapComponent() {
     };
 
     const autocompleteRef = useRef(null);
+
+    useEffect(() => {
+        if (responseData) {
+            setCompletedTyping(false);
+
+            let i = 0;
+            const stringResponse = JSON.stringify(responseData, null, 2);
+
+            const intervalId = setInterval(() => {
+                setDisplayResponse(stringResponse.slice(0, i));
+
+                i++;
+
+                if (i > stringResponse.length) {
+                    clearInterval(intervalId);
+                    setCompletedTyping(true);
+                }
+            }, 20);
+
+            return () => clearInterval(intervalId);
+        }
+    }, [responseData]);
 
     if (loadError) return (
         <div>Error loading maps</div>
@@ -175,11 +203,15 @@ function MapComponent() {
                     {renderPolygons(cropPolygons, cropColor)}
                 </GoogleMap>
                 <Notification message={notification} onClose={() => setNotification('')}/>
+                <div className="response-container">
+                    <span>{displayResponse}</span>
+                    {!completedTyping && <CursorSVG />}
+                </div>
             </div>
 
-            {triggerDownload && (
-                <PdfGenerator data={responseData} triggerDownload={triggerDownload} />
-            )}
+            {/*{triggerDownload && (*/}
+            {/*    <PdfGenerator data={responseData} triggerDownload={triggerDownload} />*/}
+            {/*)}*/}
         </>
     );
 

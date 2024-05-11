@@ -52,18 +52,21 @@ body {
   100% { transform: rotate(360deg); }
 }
 
-/*.api-response-container {*/
-/*  padding: 20px;*/
-/*  margin-top: 20px;*/
-/*  background-color: white;*/
-/*  border: 1px solid #ccc;*/
-/*  border-radius: 8px;*/
-/*  max-width: 600px;*/
-/*  min-height: 50px;*/
-/*  opacity: 0;*/
-/*  transition: opacity 2s ease-in-out;*/
-/*}*/
+.cursor {
+  display: inline-block;
+  width: 1ch;
+  animation: flicker 0.5s infinite;
+  margin-bottom: 4px;
+}
 
-/*.api-response-visible {*/
-/*  opacity: 1;*/
-/*}*/
+@keyframes flicker {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
