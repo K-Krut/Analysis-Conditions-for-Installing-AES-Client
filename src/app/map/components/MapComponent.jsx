@@ -203,7 +203,7 @@ function MapComponent() {
                     {renderPolygons(cropPolygons, cropColor)}
                 </GoogleMap>
                 <Notification message={notification} onClose={() => setNotification('')}/>
-                <div className="response-container">
+                <div className="response-container relative">
                     <span>{displayResponse}</span>
                     {!completedTyping && <CursorSVG />}
                 </div>

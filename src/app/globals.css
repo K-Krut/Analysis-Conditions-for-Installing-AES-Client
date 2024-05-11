@@ -70,3 +70,17 @@ body {
     opacity: 0;
   }
 }
+
+.response-container {
+  position: relative;
+  width: 100%; /* Ширина контейнера */
+  background-color: rgba(255, 255, 255, 0.05); /* Лёгкая прозрачность */
+  border: 2px solid #e5e0e0; /* Белая рамка */
+  color: rgba(189, 183, 183, 0.85); /* Чёрный текст */
+  border-radius: 10px; /* Закруглённые углы */
+  padding: 20px; /* Внутренние отступы */
+  margin-top: 20px; /* Отступ сверху, чтобы отделить от карты */
+  box-sizing: border-box; /* Включает padding и border в ширину и высоту элемента */
+  overflow: visible; /* Позволяет контенту расширять контейнер */
+}
+
