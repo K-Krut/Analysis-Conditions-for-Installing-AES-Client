@@ -182,7 +182,7 @@ function MapComponent() {
                             type="text"
                             placeholder="Search places..."
                             style={{
-                                width: "300px",
+                                width: "400px",
                                 height: "40px",
                                 paddingLeft: "10px",
                                 color: "black",
@@ -223,83 +223,83 @@ function MapComponent() {
                         {renderPolygons(cropPolygons, cropColor)}
                     </GoogleMap>
                     <Notification message={notification} onClose={() => setNotification('')}/>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                        <h1 className="text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl">Analysis Report</h1>
-                        <a href="#" onClick={handleDownloadClick} style={{
-                        // <a href="#" onClick={(e) => !triggerDownload && e.preventDefault()} style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            textDecoration: 'none',
-                            color: triggerDownload ? '#ADB7BE' : '#686868',
-                            fontSize: '16px',
-                            pointerEvents: triggerDownload ? 'all' : 'none',
-                            opacity: triggerDownload ? 1 : 0.5
-                        }}>
-                            Download Report
-                            <img
-                                src={'/images/pdfIcon.png'}
-                                alt="PDF icon"
-                                style={{
-                                    marginRight: '8px',
-                                    height: '60px',
-                                    width: 'auto'
-                            }}/>
-                        </a>
-                    </div>
-                    {shouldGeneratePdf &&
-                        <PdfGenerator
-                            data={responseData}
-                            shouldGeneratePdf={shouldGeneratePdf}
-                            onDownloadCompleted={handleDownloadCompleted}
-                        />}
-
-                    <div className="response-container relative"
-                         style={{
-                             maxHeight: '600px',
-                             minHeight: '80px',
-                             overflowY: 'auto',
-                             width: '100%',
-                             backgroundColor: 'rgb(18,18,19)',
-                             border: '2px solid #e5e0e0',
-                             color: 'rgba(222,216,216,0.85)',
-                             borderRadius: '10px',
-                             padding: '20px',
-                             marginTop: '20px',
-                             boxSizing: 'border-box'
-                         }}>
-                        {isLoading && (
-                            <div className="" style={{
-                                position: 'absolute',
-                                top: '20px',
-                                left: '20px',
-                                right: '20px',
-                                bottom: '20px',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}>
-                                <div className="spinner"></div>
-                            </div>
-                        )}
-                        {!isLoading && !displayResponse && (
-                            <div style={{
-                                textAlign: 'center',
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)'
-                            }}>Here will be your report details</div>
-                        )}
-                        {displayResponse && <pre style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0}}>
-                            {displayResponse}
-                        </pre>}
-                        {!completedTyping && <CursorSVG/>}
-                    </div>
-                </div>
 
                 {/*{triggerDownload && (*/}
                 {/*    <PdfGenerator data={responseData} triggerDownload={triggerDownload} />*/}
                 {/*)}*/}
+            </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <h1 className="text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl">Analysis Report</h1>
+                    <a href="#" onClick={handleDownloadClick} style={{
+                        // <a href="#" onClick={(e) => !triggerDownload && e.preventDefault()} style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        textDecoration: 'none',
+                        color: triggerDownload ? '#ADB7BE' : '#686868',
+                        fontSize: '16px',
+                        pointerEvents: triggerDownload ? 'all' : 'none',
+                        opacity: triggerDownload ? 1 : 0.5
+                    }}>
+                        Download Report
+                        <img
+                            src={'/images/pdfIcon.png'}
+                            alt="PDF icon"
+                            style={{
+                                marginRight: '8px',
+                                height: '60px',
+                                width: 'auto'
+                            }}/>
+                    </a>
+                </div>
+                {shouldGeneratePdf &&
+                    <PdfGenerator
+                        data={responseData}
+                        shouldGeneratePdf={shouldGeneratePdf}
+                        onDownloadCompleted={handleDownloadCompleted}
+                    />}
+
+                <div className="response-container relative"
+                     style={{
+                         maxHeight: '600px',
+                         minHeight: '80px',
+                         overflowY: 'auto',
+                         width: '100%',
+                         backgroundColor: 'rgb(18,18,19)',
+                         border: '2px solid #e5e0e0',
+                         color: 'rgba(222,216,216,0.85)',
+                         borderRadius: '10px',
+                         padding: '20px',
+                         marginTop: '20px',
+                         boxSizing: 'border-box'
+                     }}>
+                    {isLoading && (
+                        <div className="" style={{
+                            position: 'absolute',
+                            top: '20px',
+                            left: '20px',
+                            right: '20px',
+                            bottom: '20px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <div className="spinner"></div>
+                        </div>
+                    )}
+                    {!isLoading && !displayResponse && (
+                        <div style={{
+                            textAlign: 'center',
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)'
+                        }}>Here will be your report details</div>
+                    )}
+                    {displayResponse && <pre style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0}}>
+                            {displayResponse}
+                        </pre>}
+                    {!completedTyping && <CursorSVG/>}
+                </div>
             </div>
         </>
     );

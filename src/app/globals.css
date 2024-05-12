@@ -77,13 +77,15 @@ body {
 }
 
 .container-map-page {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: calc(100vh + 100px);
-    margin-bottom: 100px;
-    overflow: visible;
-    flex: 1;
+    margin-bottom: 200px;
+    margin-top: 50px;
+    /*display: flex;*/
+    /*flex-direction: row;*/
+    /*justify-content: space-between;*/
+    /*overflow: visible;*/
+    /*flex: 1;*/
+    /*padding-bottom: 150px;*/
+    /*overflow-y: auto;*/
 }
 
 .response-container::-webkit-scrollbar {
@@ -100,6 +102,10 @@ body {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.footer {
-    flex-shrink: 0;
-}
+/*.footer {*/
+/*    flex-shrink: 0;*/
+/*    position: fixed;*/
+/*    bottom: 0;*/
+/*    width: 100%;*/
+/*    z-index: 10;*/
+/*}*/
