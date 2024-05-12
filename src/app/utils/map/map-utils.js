@@ -1,4 +1,4 @@
-let landscape_types_details = [
+export const landscape_types_details = [
     {
         "id": 0,
         "name": "Unknown",

@@ -231,7 +231,6 @@ function MapComponent() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <h1 className="text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl">Analysis Report</h1>
                     <a href="#" onClick={handleDownloadClick} style={{
-                        // <a href="#" onClick={(e) => !triggerDownload && e.preventDefault()} style={{
                         display: 'flex',
                         alignItems: 'center',
                         textDecoration: 'none',
