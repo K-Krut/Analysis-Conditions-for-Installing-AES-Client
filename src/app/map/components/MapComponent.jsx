@@ -2,9 +2,9 @@ import React, {useState, useRef, useEffect} from 'react';
 import {Autocomplete, DrawingManager, GoogleMap, Polygon, useLoadScript} from "@react-google-maps/api";
 import {Skeleton} from "@nextui-org/skeleton";
 import Notification from "@/app/map/components/Notification";
-import PdfGenerator from "@/app/map/components/PdfGenerator ";
+import PdfGenerator from "@/app/map/components/PdfGenerator";
 import CursorSVG from "@/app/map/components/CursorSVG";
-import formatResponseData from "@/app/map/components/ResponseFormat";
+import formatResponseData from "@/app/map/components/ResponseFormat"
 
 const mapContainerStyle = {
     width: '100%',
@@ -32,11 +32,14 @@ function MapComponent() {
 
     const [displayResponse, setDisplayResponse] = useState('');
     const [completedTyping, setCompletedTyping] = useState(true);
+    const [shouldGeneratePdf, setShouldGeneratePdf] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
 
 
     const {isLoaded, loadError} = useLoadScript({
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY, libraries,
     });
+
     const onLoad = React.useCallback(function callback(map) {
         setMap(map);
         map.setCenter(new window.google.maps.LatLng(center.lat, center.lng));
@@ -57,6 +60,18 @@ function MapComponent() {
         } else {
             console.log("No details available for input: '" + place.name + "'");
         }
+    };
+    const handleDownloadClick = () => {
+        if (triggerDownload && !isDownloading) {
+            setIsDownloading(true);
+            setShouldGeneratePdf(true);
+        }
+    };
+
+    const handleDownloadCompleted = () => {
+        console.log("onDownloadCompleted  - handleDownloadCompleted")
+        setIsDownloading(false);
+        setShouldGeneratePdf(false);
     };
 
     const autocompleteRef = useRef(null);
@@ -208,7 +223,36 @@ function MapComponent() {
                         {renderPolygons(cropPolygons, cropColor)}
                     </GoogleMap>
                     <Notification message={notification} onClose={() => setNotification('')}/>
-                    <h1 className={"text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl"}>Analysis Report</h1>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                        <h1 className="text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl">Analysis Report</h1>
+                        <a href="#" onClick={handleDownloadClick} style={{
+                        // <a href="#" onClick={(e) => !triggerDownload && e.preventDefault()} style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            textDecoration: 'none',
+                            color: triggerDownload ? '#ADB7BE' : '#686868',
+                            fontSize: '16px',
+                            pointerEvents: triggerDownload ? 'all' : 'none',
+                            opacity: triggerDownload ? 1 : 0.5
+                        }}>
+                            Download Report
+                            <img
+                                src={'/images/pdfIcon.png'}
+                                alt="PDF icon"
+                                style={{
+                                    marginRight: '8px',
+                                    height: '60px',
+                                    width: 'auto'
+                            }}/>
+                        </a>
+                    </div>
+                    {shouldGeneratePdf &&
+                        <PdfGenerator
+                            data={responseData}
+                            shouldGeneratePdf={shouldGeneratePdf}
+                            onDownloadCompleted={handleDownloadCompleted}
+                        />}
+
                     <div className="response-container relative"
                          style={{
                              maxHeight: '600px',

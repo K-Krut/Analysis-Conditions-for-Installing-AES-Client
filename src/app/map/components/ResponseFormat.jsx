@@ -12,8 +12,17 @@ ${generateTextTableWeather(data?.energy_output_stats?.month_energy_stats)}`
     } else {
         return `We are sorry to inform, but we unable to generate energy output prediction for your polygon`
     }
-
 }
+
+function suitablePolygonTextPart(data) {
+    if (data.suitable_polygon_area && data.crop) {
+        return `    Suitable polygon area: ${data.suitable_polygon_area.toFixed(5)} km²
+    
+    Coordinates:\n${formatCoordinatesHTML(data.crop)}`
+    }
+    return `Unfortunately, there are no suitable areas within your range.`
+}
+
 const formatResponseData = (data) => {
     if (data) {
         return `Your Polygon
@@ -29,9 +38,7 @@ ${generateTextTableLandscape(data.area)}
 
 Suitable Territory Polygon
     
-    Suitable polygon area: ${data.suitable_polygon_area.toFixed(5)} km²
-    
-    Coordinates:\n${formatCoordinatesHTML(data.crop)}
+${suitablePolygonTextPart(data)}
     
     
 Energy Output Prediction
