@@ -83,6 +83,7 @@ body {
     height: calc(100vh + 100px);
     margin-bottom: 100px;
     overflow: visible;
+    flex: 1;
 }
 
 .response-container::-webkit-scrollbar {
@@ -97,4 +98,8 @@ body {
 
 .response-container::-webkit-scrollbar-track {
     background-color: rgba(0, 0, 0, 0.1);
+}
+
+.footer {
+    flex-shrink: 0;
 }
