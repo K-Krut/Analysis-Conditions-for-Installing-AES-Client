@@ -112,6 +112,8 @@ function MapComponent() {
         polygon.setMap(null);
         setResponseData(null);
         setTriggerDownload(false);
+        setCompletedTyping(true)
+        setDisplayResponse('')
         setIsLoading(true);
         const coordinates = (polygon.getPath().getArray().map(coord => [coord.lng(), coord.lat()]));
         console.log(coordinates)
@@ -206,9 +208,11 @@ function MapComponent() {
                         {renderPolygons(cropPolygons, cropColor)}
                     </GoogleMap>
                     <Notification message={notification} onClose={() => setNotification('')}/>
+                    <h1 className={"text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl"}>Analysis Report</h1>
                     <div className="response-container relative"
                          style={{
                              maxHeight: '600px',
+                             minHeight: '80px',
                              overflowY: 'auto',
                              width: '100%',
                              backgroundColor: 'rgb(18,18,19)',
@@ -219,9 +223,32 @@ function MapComponent() {
                              marginTop: '20px',
                              boxSizing: 'border-box'
                          }}>
-                        <pre style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0}}>
+                        {isLoading && (
+                            <div className="" style={{
+                                position: 'absolute',
+                                top: '20px',
+                                left: '20px',
+                                right: '20px',
+                                bottom: '20px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <div className="spinner"></div>
+                            </div>
+                        )}
+                        {!isLoading && !displayResponse && (
+                            <div style={{
+                                textAlign: 'center',
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)'
+                            }}>Here will be your report details</div>
+                        )}
+                        {displayResponse && <pre style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0}}>
                             {displayResponse}
-                        </pre>
+                        </pre>}
                         {!completedTyping && <CursorSVG/>}
                     </div>
                 </div>
