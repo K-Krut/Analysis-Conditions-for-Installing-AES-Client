@@ -32,7 +32,6 @@ function MapComponent() {
 
     const [displayResponse, setDisplayResponse] = useState('');
     const [completedTyping, setCompletedTyping] = useState(true);
-    const responseContainerRef = useRef(null);
 
 
     const {isLoaded, loadError} = useLoadScript({
@@ -78,7 +77,6 @@ function MapComponent() {
                 if (i > stringResponse.length) {
                     clearInterval(intervalId);
                     setCompletedTyping(true);
-                    responseContainerRef.current?.scrollTo(0, responseContainerRef.current.scrollHeight);
                 }
             }, 20);
 
