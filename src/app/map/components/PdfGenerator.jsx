@@ -203,7 +203,7 @@ const PdfGenerator = ({ data, shouldGeneratePdf, onDownloadCompleted }) => {
 
 
                 setTextForDoc(doc, 10, doc.internal.pageSize.getHeight() - 10, 10, 'times', 'bold', {},
-                    `Date of Generation: ${7}`)
+                    `Date of Generation: ${new Date().toISOString().slice(0, 10)}`)
 
                 doc.save(`report-${uuidv4()}.pdf`);
 
