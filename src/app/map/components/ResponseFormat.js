@@ -12,6 +12,7 @@ const formatResponseData = (data) => {
     Coordinates:\n${formatCoordinatesHTML(data.coordinates)}
     
     Your Polygon Landscape Types Classification
+    
     ${generateTextTable(data.area)}
    
     

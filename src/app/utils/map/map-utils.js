@@ -187,7 +187,7 @@ export function formatCoordinatesHTML(coords) {
 export const generateTextTable = (data) => {
     // Заголовки и ширина столбцов
     const headers = ['Type', 'Type ID', 'Area km²', 'Percentage %'];
-    const columnWidths = [50, 20, 20, 20];
+    const columnWidths = [50, 10, 10, 10];
 
     // Функция для создания строки таблицы
     const createRow = (cells) => {
