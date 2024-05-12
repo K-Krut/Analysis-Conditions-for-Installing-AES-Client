@@ -165,6 +165,23 @@ export function generateEnergyOutputTable(data, year) {
     return [...months, ...[["Sum", year.toLocaleString('en-US')]]]
 }
 
+export function formatCoordinatesHTML(coords) {
+    if (!Array.isArray(coords)) {
+        return '[]';
+    }
+    const groupedCoords = [];
+    for (let i = 0; i < coords.length; i += 3) {
+        let group = `    [${coords[i][0]}, ${coords[i][1]}]`;
+        if (coords[i + 1]) {
+            group += `, [${coords[i + 1][0]}, ${coords[i + 1][1]}]`;
+        }
+        if (coords[i + 2]) {
+            group += `, [${coords[i + 2][0]}, ${coords[i + 2][1]}]`;
+        }
+        groupedCoords.push(group);
+    }
+    return `[\n${groupedCoords.join(',\n')}\n]`;
+}
 
 export const ENERGY_OUTPUT_FORMULA_EN =
     `The global formula to estimate the electricity generated in output of a photovoltaic system is:

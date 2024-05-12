@@ -4,6 +4,7 @@ import {Skeleton} from "@nextui-org/skeleton";
 import Notification from "@/app/map/components/Notification";
 import PdfGenerator from "@/app/map/components/PdfGenerator ";
 import CursorSVG from "@/app/map/components/CursorSVG";
+import formatResponseData from "@/app/map/components/ResponseFormat";
 
 const mapContainerStyle = {
     width: '100%',
@@ -31,7 +32,6 @@ function MapComponent() {
 
     const [displayResponse, setDisplayResponse] = useState('');
     const [completedTyping, setCompletedTyping] = useState(true);
-
 
 
     const {isLoaded, loadError} = useLoadScript({
@@ -69,7 +69,8 @@ function MapComponent() {
             const stringResponse = JSON.stringify(responseData, null, 2);
 
             const intervalId = setInterval(() => {
-                setDisplayResponse(stringResponse.slice(0, i));
+                let formattedResponse = formatResponseData(responseData)
+                setDisplayResponse(formattedResponse.slice(0, i));
 
                 i++;
 
@@ -155,77 +156,79 @@ function MapComponent() {
     return (
         <>
             <div className="container-map-page">
-            <div className="map-container relative" style={mapContainerStyle}>
-                <Autocomplete
-                    onLoad={ref => autocompleteRef.current = ref}
-                    onPlaceChanged={onPlaceChanged}
-                >
-                    <input
-                        type="text"
-                        placeholder="Search places..."
-                        style={{
-                            width: "300px",
-                            height: "40px",
-                            paddingLeft: "10px",
-                            color: "black",
-                            backgroundColor: "white",
-                            border: "1px solid #ccc"
-                        }}
-                    />
-                </Autocomplete>
-                <GoogleMap
-                    mapContainerStyle={mapContainerStyle}
-                    center={center}
-                    zoom={14}
-                    mapTypeId={google.maps.MapTypeId.HYBRID}
-                    onLoad={onLoad}
-                    onUnmount={onUnmount}
-                >
-                    <DrawingManager
-                        onPolygonComplete={onPolygonComplete}
-                        options={{
-                            drawingControl: true, drawingControlOptions: {
-                                position: google.maps.ControlPosition.TOP_CENTER, drawingModes: ['polygon']
-                            },
-                            polygonOptions: {
-                                fillColor: '#676560',
-                                fillOpacity: 0.7,
-                                strokeWeight: 1,
-                                clickable: true,
-                                editable: true,
-                                zIndex: 1
-                            }
-                        }}
-                    />
-                    {isLoading && (
-                        <div className="loading-overlay">
-                            <div className="spinner"></div>
-                        </div>
-                    )}
-                    {renderPolygons(cropPolygons, cropColor)}
-                </GoogleMap>
-                <Notification message={notification} onClose={() => setNotification('')}/>
-                <div className="response-container relative"
-                    style={{
-                        maxHeight: '600px',
-                        overflowY: 'auto',
-                        width: '100%',
-                        backgroundColor: 'rgb(18,18,19)',
-                        border: '2px solid #e5e0e0',
-                        color: 'rgba(189, 183, 183, 0.85)',
-                        borderRadius: '10px',
-                        padding: '20px',
-                        marginTop: '20px',
-                        boxSizing: 'border-box'
-                    }}>
-                    <span>{displayResponse}</span>
-                    {!completedTyping && <CursorSVG />}
+                <div className="map-container relative" style={mapContainerStyle}>
+                    <Autocomplete
+                        onLoad={ref => autocompleteRef.current = ref}
+                        onPlaceChanged={onPlaceChanged}
+                    >
+                        <input
+                            type="text"
+                            placeholder="Search places..."
+                            style={{
+                                width: "300px",
+                                height: "40px",
+                                paddingLeft: "10px",
+                                color: "black",
+                                backgroundColor: "white",
+                                border: "1px solid #ccc"
+                            }}
+                        />
+                    </Autocomplete>
+                    <GoogleMap
+                        mapContainerStyle={mapContainerStyle}
+                        center={center}
+                        zoom={14}
+                        mapTypeId={google.maps.MapTypeId.HYBRID}
+                        onLoad={onLoad}
+                        onUnmount={onUnmount}
+                    >
+                        <DrawingManager
+                            onPolygonComplete={onPolygonComplete}
+                            options={{
+                                drawingControl: true, drawingControlOptions: {
+                                    position: google.maps.ControlPosition.TOP_CENTER, drawingModes: ['polygon']
+                                },
+                                polygonOptions: {
+                                    fillColor: '#676560',
+                                    fillOpacity: 0.7,
+                                    strokeWeight: 1,
+                                    clickable: true,
+                                    editable: true,
+                                    zIndex: 1
+                                }
+                            }}
+                        />
+                        {isLoading && (
+                            <div className="loading-overlay">
+                                <div className="spinner"></div>
+                            </div>
+                        )}
+                        {renderPolygons(cropPolygons, cropColor)}
+                    </GoogleMap>
+                    <Notification message={notification} onClose={() => setNotification('')}/>
+                    <div className="response-container relative"
+                         style={{
+                             maxHeight: '600px',
+                             overflowY: 'auto',
+                             width: '100%',
+                             backgroundColor: 'rgb(18,18,19)',
+                             border: '2px solid #e5e0e0',
+                             color: 'rgba(222,216,216,0.85)',
+                             borderRadius: '10px',
+                             padding: '20px',
+                             marginTop: '20px',
+                             boxSizing: 'border-box'
+                         }}>
+                        <pre style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0}}>
+                            {displayResponse}
+                        </pre>
+                        {!completedTyping && <CursorSVG/>}
+                    </div>
                 </div>
-            </div>
 
-            {/*{triggerDownload && (*/}
-            {/*    <PdfGenerator data={responseData} triggerDownload={triggerDownload} />*/}
-            {/*)}*/}
+                {/*{triggerDownload && (*/}
+                {/*    <PdfGenerator data={responseData} triggerDownload={triggerDownload} />*/}
+                {/*)}*/}
             </div>
         </>
     );
