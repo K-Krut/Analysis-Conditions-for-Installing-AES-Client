@@ -183,36 +183,34 @@ export function formatCoordinatesHTML(coords) {
     return `[\n${groupedCoords.join(',\n')}\n]`;
 }
 
-
 export const generateTextTable = (data) => {
-    // Заголовки и ширина столбцов
     const headers = ['Type', 'Type ID', 'Area km²', 'Percentage %'];
-    const columnWidths = [50, 10, 10, 10];
+    let columnWidths = headers.map(header => header.length); // Начальная инициализация ширин колонок по заголовкам
 
-    // Функция для создания строки таблицы
+    data.forEach(item => {
+        columnWidths[0] = Math.max(columnWidths[0], item.name.length);
+        columnWidths[1] = Math.max(columnWidths[1], item.id.toString().length);
+        columnWidths[2] = Math.max(columnWidths[2], item.area.toFixed(5).toString().length);
+        columnWidths[3] = Math.max(columnWidths[3], item.percentage.toFixed(0).toString().length);
+    });
+
     const createRow = (cells) => {
-        return cells.map((cell, index) => {
-            // Преобразование в строку перед использованием padEnd
-            const cellString = String(cell);  // Преобразование cell в строку
-            return cellString.padEnd(columnWidths[index], ' ');
-        }).join('|') + '\n';
+        return cells.map((cell, index) => cell.toString().padEnd(columnWidths[index], ' ')).join(' | ') + '\n';
     };
 
-
-    // Создаем заголовок таблицы
     let tableText = createRow(headers);
-    tableText += '-'.repeat(columnWidths.reduce((a, b) => a + b, 0) + 2) + '\n'; // Подчеркивание заголовков
+    tableText += '-'.repeat(columnWidths.reduce((a, b) => a + b + 3, -3)) + '\n';
 
-    // Добавление строк данных
     data.forEach(item => {
         tableText += createRow([
             item.name,
             item.id,
-            item.area.toFixed(5).toLocaleString('en-US'),
+            item.area.toFixed(5),
             item.percentage.toFixed(0)
+
         ]);
     });
-
+    tableText += '-'.repeat(columnWidths.reduce((a, b) => a + b + 3, -3)) + '\n';
     return tableText;
 };
 

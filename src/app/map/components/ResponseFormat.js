@@ -1,7 +1,6 @@
 import {
     formatCoordinatesHTML,
-    generateLandscapeStatsTable,
-    generateLandscapeStatsTableHTML, generateTextTable
+    generateTextTable
 } from "@/app/utils/map/map-utils";
 
 const formatResponseData = (data) => {
@@ -13,7 +12,7 @@ const formatResponseData = (data) => {
     
     Your Polygon Landscape Types Classification
     
-    ${generateTextTable(data.area)}
+${generateTextTable(data.area)}
    
     
     ----------------------------------------
