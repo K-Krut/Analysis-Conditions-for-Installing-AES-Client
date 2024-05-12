@@ -207,16 +207,16 @@ function MapComponent() {
                 <Notification message={notification} onClose={() => setNotification('')}/>
                 <div className="response-container relative"
                     style={{
-                        maxHeight: '600px', // Максимальная высота контейнера
-                        overflowY: 'auto',  // Включает вертикальную прокрутку при переполнении
-                        width: '100%',      // Задаёт ширину контейнера
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)', // Фоновый цвет с лёгкой прозрачностью
-                        border: '2px solid #e5e0e0', // Рамка
-                        color: 'rgba(189, 183, 183, 0.85)', // Цвет текста
-                        borderRadius: '10px', // Закруглённые углы
-                        padding: '20px', // Внутренние отступы
-                        marginTop: '20px', // Отступ сверху
-                        boxSizing: 'border-box' // Включает padding и border в ширину и высоту элемента
+                        maxHeight: '600px',
+                        overflowY: 'auto',
+                        width: '100%',
+                        backgroundColor: 'rgb(18,18,19)',
+                        border: '2px solid #e5e0e0',
+                        color: 'rgba(189, 183, 183, 0.85)',
+                        borderRadius: '10px',
+                        padding: '20px',
+                        marginTop: '20px',
+                        boxSizing: 'border-box'
                     }}>
                     <span>{displayResponse}</span>
                     {!completedTyping && <CursorSVG />}

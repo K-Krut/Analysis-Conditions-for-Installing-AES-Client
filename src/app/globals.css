@@ -3,95 +3,98 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+    :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+    }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-  display: flex;
-  flex-direction: column;
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+            to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))
+    ) rgb(var(--background-start-rgb));
+    display: flex;
+    flex-direction: column;
 }
 
 .loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border-left-color: #fbbf24;
-  animation: spin 1s infinite linear;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border-left-color: #fbbf24;
+    animation: spin 1s infinite linear;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .cursor {
-  display: inline-block;
-  width: 1ch;
-  animation: flicker 0.5s infinite;
-  margin-bottom: 4px;
+    display: inline-block;
+    width: 1ch;
+    animation: flicker 0.5s infinite;
+    margin-bottom: 4px;
 }
 
 @keyframes flicker {
-  0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 .container-map-page {
-  display: flex;
-  flex-direction: row; /* Элементы в колонку */
-  justify-content: space-between; /* Распределяет пространство между и вокруг содержимого */
-  height: calc(100vh + 100px); /* 100px - это высота вашего навбара и/или футера, если есть */
-  margin-bottom: 100px;
-  overflow: visible;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: calc(100vh + 100px);
+    margin-bottom: 100px;
+    overflow: visible;
 }
 
 .response-container::-webkit-scrollbar {
-  width: 6px; /* Ширина скроллбара */
-  background-color: rgba(0,0,0,0); /* Прозрачный фон скроллбара */
+    width: 6px;
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .response-container::-webkit-scrollbar-thumb {
-  background-color: #666; /* Цвет ползунка */
-  border-radius: 10px; /* Закругленные края ползунка */
+    background-color: #666;
+    border-radius: 10px;
 }
 
 .response-container::-webkit-scrollbar-track {
-  background-color: rgba(0,0,0,0.1); /* Цвет дорожки скроллбара */
+    background-color: rgba(0, 0, 0, 0.1);
 }
