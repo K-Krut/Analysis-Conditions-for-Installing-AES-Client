@@ -24,6 +24,8 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  display: flex;
+  flex-direction: column;
 }
 
 .loading-overlay {
@@ -71,16 +73,25 @@ body {
   }
 }
 
-.response-container {
-  position: relative;
-  width: 100%; /* Ширина контейнера */
-  background-color: rgba(255, 255, 255, 0.05); /* Лёгкая прозрачность */
-  border: 2px solid #e5e0e0; /* Белая рамка */
-  color: rgba(189, 183, 183, 0.85); /* Чёрный текст */
-  border-radius: 10px; /* Закруглённые углы */
-  padding: 20px; /* Внутренние отступы */
-  margin-top: 20px; /* Отступ сверху, чтобы отделить от карты */
-  box-sizing: border-box; /* Включает padding и border в ширину и высоту элемента */
-  overflow: visible; /* Позволяет контенту расширять контейнер */
+.container-map-page {
+  display: flex;
+  flex-direction: row; /* Элементы в колонку */
+  justify-content: space-between; /* Распределяет пространство между и вокруг содержимого */
+  height: calc(100vh + 100px); /* 100px - это высота вашего навбара и/или футера, если есть */
+  margin-bottom: 100px;
+  overflow: visible;
 }
 
+.response-container::-webkit-scrollbar {
+  width: 6px; /* Ширина скроллбара */
+  background-color: rgba(0,0,0,0); /* Прозрачный фон скроллбара */
+}
+
+.response-container::-webkit-scrollbar-thumb {
+  background-color: #666; /* Цвет ползунка */
+  border-radius: 10px; /* Закругленные края ползунка */
+}
+
+.response-container::-webkit-scrollbar-track {
+  background-color: rgba(0,0,0,0.1); /* Цвет дорожки скроллбара */
+}
