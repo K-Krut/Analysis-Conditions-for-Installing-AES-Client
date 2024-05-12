@@ -1,13 +1,19 @@
-import {formatCoordinates, formatCoordinatesHTML, generateLandscapeStatsTable} from "@/app/utils/map/map-utils";
+import {
+    formatCoordinatesHTML,
+    generateLandscapeStatsTable,
+    generateLandscapeStatsTableHTML, generateTextTable
+} from "@/app/utils/map/map-utils";
 
 const formatResponseData = (data) => {
     return `Your Polygon
     
     Your polygon area: ${data.initial_polygon_area.toFixed(5)} km²
     
-    Your Polygon Landscape Types Classification
-    ${generateLandscapeStatsTable(data.area)}
+    Coordinates:\n${formatCoordinatesHTML(data.coordinates)}
     
+    Your Polygon Landscape Types Classification
+    ${generateTextTable(data.area)}
+   
     
     ----------------------------------------
     

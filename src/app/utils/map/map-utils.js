@@ -148,7 +148,7 @@ export function generateLandscapeStatsTable(arr) {
     ]);
 }
 
-export function generateLandTypesTable(arr=landscape_types_details) {
+export function generateLandTypesTable(arr = landscape_types_details) {
     return arr.map(item => [
         item.id,
         item.name,
@@ -158,8 +158,8 @@ export function generateLandTypesTable(arr=landscape_types_details) {
 }
 
 export function generateEnergyOutputTable(data, year) {
-    let months =  data.map(item => [
-        new Date(item.date).toLocaleString('en-US', { month: 'long' }),
+    let months = data.map(item => [
+        new Date(item.date).toLocaleString('en-US', {month: 'long'}),
         item.energy.toLocaleString('en-US')
     ])
     return [...months, ...[["Sum", year.toLocaleString('en-US')]]]
@@ -182,6 +182,39 @@ export function formatCoordinatesHTML(coords) {
     }
     return `[\n${groupedCoords.join(',\n')}\n]`;
 }
+
+
+export const generateTextTable = (data) => {
+    // Заголовки и ширина столбцов
+    const headers = ['Type', 'Type ID', 'Area km²', 'Percentage %'];
+    const columnWidths = [50, 20, 20, 20];
+
+    // Функция для создания строки таблицы
+    const createRow = (cells) => {
+        return cells.map((cell, index) => {
+            // Преобразование в строку перед использованием padEnd
+            const cellString = String(cell);  // Преобразование cell в строку
+            return cellString.padEnd(columnWidths[index], ' ');
+        }).join('|') + '\n';
+    };
+
+
+    // Создаем заголовок таблицы
+    let tableText = createRow(headers);
+    tableText += '-'.repeat(columnWidths.reduce((a, b) => a + b, 0) + 2) + '\n'; // Подчеркивание заголовков
+
+    // Добавление строк данных
+    data.forEach(item => {
+        tableText += createRow([
+            item.name,
+            item.id,
+            item.area.toFixed(5).toLocaleString('en-US'),
+            item.percentage.toFixed(0)
+        ]);
+    });
+
+    return tableText;
+};
 
 export const ENERGY_OUTPUT_FORMULA_EN =
     `The global formula to estimate the electricity generated in output of a photovoltaic system is:
