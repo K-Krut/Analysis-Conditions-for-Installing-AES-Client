@@ -183,7 +183,7 @@ export function formatCoordinatesHTML(coords) {
     return `[\n${groupedCoords.join(',\n')}\n]`;
 }
 
-export const generateTextTable = (data) => {
+export const generateTextTableLandscape = (data) => {
     const headers = ['Type', 'Type ID', 'Area km²', 'Percentage %'];
     let columnWidths = headers.map(header => header.length); // Начальная инициализация ширин колонок по заголовкам
 
@@ -211,6 +211,35 @@ export const generateTextTable = (data) => {
         ]);
     });
     tableText += '-'.repeat(columnWidths.reduce((a, b) => a + b + 3, -3)) + '\n';
+    return tableText;
+};
+
+export const generateTextTableWeather = (data) => {
+    const headers = ['Month', 'Energy Output (kWh)'];
+    let columnWidths = headers.map(header => header.length);
+
+    const rows = data.map(item => {
+        const month = new Date(item.date).toLocaleString('en-US', { month: 'long' });
+        const energy = item.energy.toLocaleString('en-US');
+        columnWidths[0] = Math.max(columnWidths[0], month.length);
+        columnWidths[1] = Math.max(columnWidths[1], energy.length);
+        return [month, energy];
+    });
+
+    const totalEnergy = data.reduce((sum, item) => sum + item.energy, 0);
+    const totalRow = ["Sum", totalEnergy.toLocaleString('en-US')];
+    columnWidths[1] = Math.max(columnWidths[1], totalRow[1].length);
+
+    const createRow = (cells) => {
+        return cells.map((cell, index) => cell.toString().padEnd(columnWidths[index], ' ')).join(' | ') + '\n';
+    };
+
+    let tableText = createRow(headers) + '-'.repeat(columnWidths.reduce((a, b) => a + b + 3, -3)) + '\n';
+    rows.forEach(row => {
+        tableText += createRow(row);
+    });
+    tableText += createRow(totalRow);
+
     return tableText;
 };
 
