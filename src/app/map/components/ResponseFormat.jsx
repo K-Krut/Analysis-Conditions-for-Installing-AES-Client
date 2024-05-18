@@ -43,6 +43,18 @@ ${suitablePolygonTextPart(data)}
     
 Energy Output Prediction
 ${generateWeatherTextPart(data)}
+
+Visit Resources Page, there you can find Formula for calculation energy output and all landscape types
+
+
+----------------------------
+
+Here are some recommendations and useful resources:
+    - ЗАКОН УКРАЇНИ Про альтернативні джерела енергії: https://zakon.rada.gov.ua/laws/show/555-15#Text
+    - ЗАКОН УКРАЇНИ Про ринок електиричної енергії: https://zakon.rada.gov.ua/laws/show/2019-19#Text
+    - Please note that if you are planning to build a solar panel power plant, you do not need to decide on the type of your power plant. We recommend that you familiarize yourself with the types of solar power plants in detail here: https://www.solargarden.com.ua/typy-sonyachnyh-elektrostantsiy-ih-efektyvnist-perevahy-i-nedoliky/
+    - There are many types of solar panels with different technical characteristics. Monocrystalline panels, for example, usually have higher efficiency than polycrystalline panels, but can be more expensive. You can learn about the types of solar panels here: https://www.greenmatch.co.uk/blog/2015/09/types-of-solar-panels, https://www.solarchoice.net.au/solar-panels/sizes/
+    - Pay attention to quality and safety standards when choosing components for your solar system. This will ensure the reliability and durability of the installation. Information on standards can be found at the National Standardization Body of Ukraine or on the websites of certification agencies.
 `
     } else {
         return `We are sorry to inform, but we unable to generate report for your polygon`
