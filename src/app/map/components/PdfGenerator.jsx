@@ -6,7 +6,7 @@ import {
     generateEnergyOutputTable,
     generateLandscapeStatsTable,
     generateLandTypesTable,
-    ENERGY_OUTPUT_FORMULA_EN
+    ENERGY_OUTPUT_FORMULA_EN, RECOMMENDATIONS_STR
 } from '../../utils/map/map-utils.js'
 
 
@@ -180,6 +180,16 @@ const PdfGenerator = ({ data, shouldGeneratePdf, onDownloadCompleted }) => {
                 doc.addPage();
                 startY = 10
                 setTextForDoc(doc, 10, startY, 12, 'times', 'bold', {},
+                    'Recommendations and useful resources')
+
+                setTextForDoc(doc, 10, defineY(doc, 10), 10, 'times', 'normal', {},
+                    RECOMMENDATIONS_STR)
+
+                /**************************************************************************************************************/
+
+                doc.addPage();
+                startY = 10
+                setTextForDoc(doc, 10, startY, 12, 'times', 'bold', {},
                     'Energy Output Formula')
 
                 setTextForDoc(doc, 10, defineY(doc, 10), 10, 'times', 'normal', {},
@@ -213,7 +223,7 @@ const PdfGenerator = ({ data, shouldGeneratePdf, onDownloadCompleted }) => {
 
             generatePdf();
         }
-    }, [shouldGeneratePdf, onDownloadCompleted]); // Зависимости эффекта
+    }, [shouldGeneratePdf, onDownloadCompleted]);
 
     return null;
 
