@@ -3,8 +3,14 @@ import Image from "next/image";
 
 const Footer = () => {
   return (
-    <footer className="footer border z-10 border-t-[#33353F] border-l-transparent border-r-transparent text-white">
-      <div className="container p-12 flex justify-between">
+    <footer className="footer border z-10 border-t-[#33353F] border-l-transparent border-r-transparent text-white bg-[#121212]"
+            style={{
+                position: "fixed",
+                bottom: "0",
+                width: "100%",
+            }}
+    >
+      <div className="container p-8 flex justify-between">
         <span>
             <Image
                 src="/images/1-07.png"

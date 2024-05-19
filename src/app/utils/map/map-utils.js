@@ -1,4 +1,4 @@
-let landscape_types_details = [
+export const landscape_types_details = [
     {
         "id": 0,
         "name": "Unknown",
@@ -148,7 +148,7 @@ export function generateLandscapeStatsTable(arr) {
     ]);
 }
 
-export function generateLandTypesTable(arr=landscape_types_details) {
+export function generateLandTypesTable(arr = landscape_types_details) {
     return arr.map(item => [
         item.id,
         item.name,
@@ -158,14 +158,106 @@ export function generateLandTypesTable(arr=landscape_types_details) {
 }
 
 export function generateEnergyOutputTable(data, year) {
-    let months =  data.map(item => [
-        new Date(item.date).toLocaleString('en-US', { month: 'long' }),
+    let months = data.map(item => [
+        new Date(item.date).toLocaleString('en-US', {month: 'long'}),
         item.energy.toLocaleString('en-US')
     ])
     return [...months, ...[["Sum", year.toLocaleString('en-US')]]]
 }
 
+export function formatCoordinatesHTML(coords) {
+    if (!Array.isArray(coords)) {
+        return '[]';
+    }
+    const groupedCoords = [];
+    for (let i = 0; i < coords.length; i += 3) {
+        let group = `    [${coords[i][0]}, ${coords[i][1]}]`;
+        if (coords[i + 1]) {
+            group += `, [${coords[i + 1][0]}, ${coords[i + 1][1]}]`;
+        }
+        if (coords[i + 2]) {
+            group += `, [${coords[i + 2][0]}, ${coords[i + 2][1]}]`;
+        }
+        groupedCoords.push(group);
+    }
+    return `[\n${groupedCoords.join(',\n')}\n]`;
+}
 
+export const generateTextTableLandscape = (data) => {
+    const headers = ['Type', 'Type ID', 'Area km²', 'Percentage %'];
+    let columnWidths = headers.map(header => header.length); // Начальная инициализация ширин колонок по заголовкам
+
+    data.forEach(item => {
+        columnWidths[0] = Math.max(columnWidths[0], item.name.length);
+        columnWidths[1] = Math.max(columnWidths[1], item.id.toString().length);
+        columnWidths[2] = Math.max(columnWidths[2], item.area.toFixed(5).toString().length);
+        columnWidths[3] = Math.max(columnWidths[3], item.percentage.toFixed(0).toString().length);
+    });
+
+    const createRow = (cells) => {
+        return cells.map((cell, index) => cell.toString().padEnd(columnWidths[index], ' ')).join(' | ') + '\n';
+    };
+
+    let tableText = createRow(headers);
+    tableText += '-'.repeat(columnWidths.reduce((a, b) => a + b + 3, -3)) + '\n';
+
+    data.forEach(item => {
+        tableText += createRow([
+            item.name,
+            item.id,
+            item.area.toFixed(5),
+            item.percentage.toFixed(0)
+
+        ]);
+    });
+    tableText += '-'.repeat(columnWidths.reduce((a, b) => a + b + 3, -3)) + '\n';
+    return tableText;
+};
+
+export const generateTextTableWeather = (data) => {
+    const headers = ['Month', 'Energy Output (kWh)'];
+    let columnWidths = headers.map(header => header.length);
+
+    const rows = data.map(item => {
+        const month = new Date(item.date).toLocaleString('en-US', { month: 'long' });
+        const energy = item.energy.toLocaleString('en-US');
+        columnWidths[0] = Math.max(columnWidths[0], month.length);
+        columnWidths[1] = Math.max(columnWidths[1], energy.length);
+        return [month, energy];
+    });
+
+    const totalEnergy = data.reduce((sum, item) => sum + item.energy, 0);
+    const totalRow = ["Sum", totalEnergy.toLocaleString('en-US')];
+    columnWidths[1] = Math.max(columnWidths[1], totalRow[1].length);
+
+    const createRow = (cells) => {
+        return cells.map((cell, index) => cell.toString().padEnd(columnWidths[index], ' ')).join(' | ') + '\n';
+    };
+
+    let tableText = createRow(headers) + '-'.repeat(columnWidths.reduce((a, b) => a + b + 3, -3)) + '\n';
+    rows.forEach(row => {
+        tableText += createRow(row);
+    });
+    tableText += createRow(totalRow);
+
+    return tableText;
+};
+
+export const RECOMMENDATIONS_STR = `Here are some recommendations and useful resources:
+    - LAW OF UKRAINE On Alternative Energy Sources: https://zakon.rada.gov.ua/laws/show/555-15#Text
+    - LAW OF UKRAINE On the Electricity Market: https://zakon.rada.gov.ua/laws/show/2019-19#Text
+    - Please note that if you are planning to build a solar panel power plant, you do not need to decide on the type of your power plant. 
+        We recommend that you familiarize yourself with the types of solar power plants in detail here: 
+        https://www.solargarden.com.ua/typy-sonyachnyh-elektrostantsiy-ih-efektyvnist-perevahy-i-nedoliky/
+    - There are many types of solar panels with different technical characteristics. Monocrystalline panels, for example, 
+        usually have higher efficiency than polycrystalline panels, but can be more expensive. You can learn about the types 
+        of solar panels here: 
+                https://www.greenmatch.co.uk/blog/2015/09/types-of-solar-panels, 
+                https://www.solarchoice.net.au/solar-panels/sizes/
+    - Pay attention to quality and safety standards when choosing components for your solar system. 
+    This will ensure the reliability and durability of the installation. Information on standards can be found at 
+    the National Standardization Body of Ukraine or on the websites of certification agencies.
+    `
 export const ENERGY_OUTPUT_FORMULA_EN =
     `The global formula to estimate the electricity generated in output of a photovoltaic system is:
 
@@ -174,14 +266,14 @@ export const ENERGY_OUTPUT_FORMULA_EN =
             E = Energy (kWh)
             A = Total solar panel Area (m2)
             r = solar panel yield or efficiency(%) 
-            H = Annual average solar radiation on tilted panels (shadings not included)
+            H = Monthly average solar radiation on tilted panels (shadings not included)
             PR = Performance ratio, coefficient for losses (range between 0.5 and 0.9, default value = 0.75)
             
     r is the yield of the solar panel given by the ratio : electrical power (in kWp) of one solar panel divided by the area of one panel.
     The unit of the nominal power of the photovoltaic panel in these conditions is called "Watt-peak"
     (Wp or kWp=1000 Wp or MWp=1000000 Wp).
     
-    H  is the annual average solar radiation on tilted panels. 
+    H  is the monthly average solar radiation on tilted panels. 
     
     PR : PR (Performance Ratio) is a very important value to evaluate the quality of a photovoltaic installation because it gives 
     the performance of the installation independently of the orientation, inclination of the panel. It includes all losses.

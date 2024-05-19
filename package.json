@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@heroicons/react": "^2.0.18",
+    "@mui/material": "^5.15.17",
     "@nextui-org/skeleton": "^2.0.27",
     "@nextui-org/theme": "^2.2.3",
     "@react-google-maps/api": "^2.19.3",
