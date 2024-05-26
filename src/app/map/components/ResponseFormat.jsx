@@ -1,7 +1,11 @@
 import {
     formatCoordinatesHTML,
-    generateTextTableLandscape, generateTextTableWeather
+    generateTextTableLandscape
 } from "@/app/utils/map/map-utils";
+
+import {
+    generateTextTableWeather
+} from "@/app/utils/map/solar-utils";
 
 function generateWeatherTextPart(data) {
     if (data?.energy_output_stats?.month_energy_stats !== undefined && data?.energy_output_stats?.month_energy_stats !== null) {

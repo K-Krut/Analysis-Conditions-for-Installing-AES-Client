@@ -3,11 +3,14 @@ import {jsPDF} from "jspdf";
 import 'jspdf-autotable';
 import {v4 as uuidv4} from 'uuid';
 import {
-    generateEnergyOutputTable,
     generateLandscapeStatsTable,
-    generateLandTypesTable,
-    ENERGY_OUTPUT_FORMULA_EN, RECOMMENDATIONS_STR
+    generateLandTypesTable
 } from '../../utils/map/map-utils.js'
+
+import {
+    generateEnergyOutputTable,
+    ENERGY_OUTPUT_FORMULA_EN, RECOMMENDATIONS_STR
+} from '../../utils/map/solar-utils.js'
 
 
 function formatCoordinates(coords) {
@@ -132,7 +135,7 @@ const PdfGenerator = ({ data, shouldGeneratePdf, onDownloadCompleted }) => {
                 /***************************************/
 
                 if (data?.energy_output_stats && data?.energy_output_stats !== {}) {
-                    solarPfd(doc, data)
+                    solarPfd(doc, data?.energy_output_stats)
 
                     // windPfd(doc, data?.energy_output_stats)
                 } else {
@@ -264,13 +267,13 @@ function windPfd(doc, response) {
 
     if (response?.panels_area) {
         setTextForDoc(doc, 10, defineY(doc), 10, 'times', 'normal', {},
-            `Solar Panels Area: ${response?.panels_area.toFixed(2)} m²`)
+            `Area Required for one Wind Turbine: ${response?.wind_turbine_area} km²`)
     }
 
     if (response?.month_energy_stats && response?.month_energy_stats !== []) {
         doc.autoTable({
-            head: [['Month', 'Output kWt',]],
-            body: generateEnergyOutputTable(response?.month_energy_stats, response?.yearly_energy),
+            head: [['Month', 'Avg. Wind Speed', 'Max. Wind Speed', 'Output mWt 1 Turbine', 'Output mWt',]],
+            body: generateEnergyOutputTable(response?.month_energy_stats, response?.yearly_energy, response?.yearly_energy_one_turbine),
             startY: defineY(doc),
         });
     }
