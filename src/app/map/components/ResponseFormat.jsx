@@ -51,7 +51,6 @@ function energyOutputPrediction(data) {
 }
 
 function recommendationsText(data) {
-    console.log(data?.type)
     if (data?.type === "wind") {
         return `
 ----------------------------
@@ -89,6 +88,7 @@ function generateWindTextPart(data) {
 are approximate and have been based on constant values, which may differ from the values for the type of turbins you choose.
 
 ${generateWindTextTable(data?.energy_output_stats)}`
+
 }
 
 

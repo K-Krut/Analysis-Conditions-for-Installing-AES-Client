@@ -61,7 +61,6 @@ function defineY(doc, add_y = 10, new_page = false) {
 const PdfGenerator = ({ data, shouldGeneratePdf, onDownloadCompleted }) => {
 
     useEffect(() => {
-        console.log('shouldGeneratePdf ', shouldGeneratePdf)
         if (shouldGeneratePdf) {
             const generatePdf = () => {
                 const doc = new jsPDF();
@@ -71,7 +70,7 @@ const PdfGenerator = ({ data, shouldGeneratePdf, onDownloadCompleted }) => {
 
                 doc.setFont('times', 'bold');
                 doc.setFontSize(22);
-                doc.text('Landscape Analysis Report', pageWidth / 2, pageHeight / 2, { align: 'center' });
+                doc.text('Landscape Analysis Report', pageWidth / 2, pageHeight / 2, {align: 'center'});
 
                 /**************************************************************************************************************/
 
@@ -88,9 +87,8 @@ const PdfGenerator = ({ data, shouldGeneratePdf, onDownloadCompleted }) => {
                         `Your polygon area: ${data.initial_polygon_area.toFixed(5)} km²`)
                 }
 
-                setTextForDoc(doc, 10,  defineY(doc), 10, 'times', 'normal', {}, `Coordinates:\n${formatCoordinates(data.coordinates)}`)
+                setTextForDoc(doc, 10, defineY(doc), 10, 'times', 'normal', {}, `Coordinates:\n${formatCoordinates(data.coordinates)}`)
 
-                console.log(startY)
                 if (data?.coordinates) {
                     setTextForDoc(doc, 10, defineY(doc, 20 + (10 * data?.coordinates?.length / 2)), 12, 'times', 'bold', {},
                         'Your Polygon Landscape Types Classification')
@@ -99,11 +97,10 @@ const PdfGenerator = ({ data, shouldGeneratePdf, onDownloadCompleted }) => {
                         'Your Polygon Landscape Types Classification')
                 }
 
-                console.log(startY)
                 setTextForDoc(doc, 10, defineY(doc), 10, 'times', 'normal', {},
                     'This document describes the specifications of the land cover data products.')
-                console.log(startY)
-                if (data.area && Array.isArray(data.area )) {
+
+                if (data.area && Array.isArray(data.area)) {
                     doc.autoTable({
                         head: [['Type', 'Type ID', 'Area km²', 'Percentage %']],
                         body: generateLandscapeStatsTable(data.area),
@@ -252,8 +249,6 @@ function solarPfd(doc, response) {
 
 }
 
-
-
 function windPfd(doc, response) {
     doc.addPage();
 
@@ -287,6 +282,15 @@ function windPfd(doc, response) {
 
     /**************************************************************************************************************/
 
+    if (response?.month_energy_stats && response?.month_energy_stats !== []) {
+        doc.addPage()
+        setTextForDoc(doc, 10, defineY(doc), 12, 'times', 'bold', {},
+            'Wind Roses')
+        addImagesPage(doc, response?.month_energy_stats)
+    }
+
+    /**************************************************************************************************************/
+
     doc.addPage();
 
     startY = 10
@@ -296,6 +300,34 @@ function windPfd(doc, response) {
     setTextForDoc(doc, 10, defineY(doc, 10), 10, 'times', 'normal', {},
         WIND_ENERGY_OUTPUT_FORMULA_EN)
 
+}
+
+function addImagesPage(doc, data) {
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 10;
+    const contentWidth = (pageWidth - 3 * margin) / 2;
+    const contentHeight = contentWidth / 1.33;
+    let xPosition = margin;
+    let yPosition = margin;
+
+    for (let i = 0; i < data.length; i++) {
+        if (yPosition + contentHeight + 20 > pageHeight) {
+            doc.addPage();
+            yPosition = margin;
+        }
+
+        doc.addImage(data[i]?.wind_rose_base_64, 'PNG', xPosition, yPosition, contentWidth, contentHeight);
+        let dateStr = new Date(2022, data[i]?.month - 1).toLocaleString('en-US', {month: 'long'})
+        doc.text(dateStr, xPosition, yPosition + contentHeight + 10, { maxWidth: contentWidth });
+
+        if (xPosition === margin) {
+            xPosition += contentWidth + margin;
+        } else {
+            xPosition = margin;
+            yPosition += contentHeight + 20;
+        }
+    }
 }
 
 

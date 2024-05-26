@@ -76,7 +76,6 @@ function MapComponent() {
     };
 
     const handleDownloadCompleted = () => {
-        console.log("onDownloadCompleted  - handleDownloadCompleted")
         setIsDownloading(false);
         setShouldGeneratePdf(false);
     };
@@ -100,7 +99,7 @@ function MapComponent() {
                     clearInterval(intervalId);
                     setCompletedTyping(true);
                 }
-            }, 10);
+            }, 16);
 
             return () => clearInterval(intervalId);
         }
