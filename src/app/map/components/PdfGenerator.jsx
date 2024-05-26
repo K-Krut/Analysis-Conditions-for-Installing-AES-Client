@@ -11,6 +11,7 @@ import {
     generateEnergyOutputTable,
     ENERGY_OUTPUT_FORMULA_EN, RECOMMENDATIONS_STR
 } from '../../utils/map/solar-utils.js'
+import {generateWindEnergyOutputTable, WIND_ENERGY_OUTPUT_FORMULA_EN} from "@/app/utils/map/wind-utils";
 
 
 function formatCoordinates(coords) {
@@ -265,7 +266,7 @@ function windPfd(doc, response) {
             `Number of Wind Turbines can be installed: ${response?.turbines ? response?.turbines : 0}`)
     }
 
-    if (response?.panels_area) {
+    if (response?.wind_turbine_area) {
         setTextForDoc(doc, 10, defineY(doc), 10, 'times', 'normal', {},
             `Area Required for one Wind Turbine: ${response?.wind_turbine_area} km²`)
     }
@@ -273,23 +274,10 @@ function windPfd(doc, response) {
     if (response?.month_energy_stats && response?.month_energy_stats !== []) {
         doc.autoTable({
             head: [['Month', 'Avg. Wind Speed', 'Max. Wind Speed', 'Output mWt 1 Turbine', 'Output mWt',]],
-            body: generateEnergyOutputTable(response?.month_energy_stats, response?.yearly_energy, response?.yearly_energy_one_turbine),
+            body: generateWindEnergyOutputTable(response?.month_energy_stats, response?.yearly_energy, response?.yearly_energy_one_turbine),
             startY: defineY(doc),
         });
     }
-
-
-    /**************************************************************************************************************/
-
-    doc.addPage();
-
-    startY = 10
-
-    setTextForDoc(doc, 10, startY, 12, 'times', 'bold', {},
-        'Recommendations and useful resources')
-
-    setTextForDoc(doc, 10, defineY(doc, 10), 10, 'times', 'normal', {},
-        RECOMMENDATIONS_STR)
 
     /**************************************************************************************************************/
 
@@ -301,7 +289,7 @@ function windPfd(doc, response) {
         'Energy Output Formula')
 
     setTextForDoc(doc, 10, defineY(doc, 10), 10, 'times', 'normal', {},
-        ENERGY_OUTPUT_FORMULA_EN)
+        WIND_ENERGY_OUTPUT_FORMULA_EN)
 
 }
 
