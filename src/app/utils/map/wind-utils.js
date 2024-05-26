@@ -3,8 +3,8 @@ export function generateWindEnergyOutputTable(data, yearly_energy, yearly_energy
         new Date(2022, item.month - 1).toLocaleString('en-US', {month: 'long'}),
         item.average_wind_speed,
         item.max_wind_speed,
-        (item.energy_one_turbine / 1000).toLocaleString('en-US') ,
-        (item.energy / 1000).toLocaleString('en-US')
+        (item.energy_one_turbine / 1000).toFixed(0).toLocaleString('en-US') ,
+        (item.energy / 1000).toFixed(0).toLocaleString('en-US')
     ])
     return [
         ...months,
@@ -20,12 +20,12 @@ export const generateWindTextTable = (data) => {
 
     let columnWidths = headers.map(header => header.length);
 
-    const rows = data.map(item => {
+    const rows = data?.month_energy_stats.map(item => {
         const month = new Date(2022, item.month - 1).toLocaleString('en-US', { month: 'long' });
-        const avgWindSpeed = item.average_wind_speed.toFixed(2);
-        const maxWindSpeed = item.max_wind_speed.toFixed(2);
-        const energyOneTurbine = (item.energy_one_turbine / 1000).toLocaleString('en-US');
-        const energy = (item.energy / 1000).toLocaleString('en-US');
+        const avgWindSpeed = item?.average_wind_speed.toFixed(0);
+        const maxWindSpeed = item?.max_wind_speed.toFixed(0);
+        const energyOneTurbine = (item?.energy_one_turbine / 1000).toFixed(0).toLocaleString('en-US');
+        const energy = (item?.energy / 1000).toFixed(0).toLocaleString('en-US');
         columnWidths[0] = Math.max(columnWidths[0], month.length);
         columnWidths[1] = Math.max(columnWidths[1], avgWindSpeed.length);
         columnWidths[2] = Math.max(columnWidths[2], maxWindSpeed.length);
@@ -34,8 +34,8 @@ export const generateWindTextTable = (data) => {
         return [month, avgWindSpeed, maxWindSpeed, energyOneTurbine, energy];
     });
 
-    const totalRowOne = ["Sum", "", "", yearly_energy_one_turbine.toLocaleString('en-US'), ""];
-    const totalRow = ["Sum", "", "", "", yearly_energy.toLocaleString('en-US')];
+    const totalRowOne = ["Sum", "", "", data?.yearly_energy_one_turbine?.toFixed(0).toLocaleString('en-US'), ""];
+    const totalRow = ["Sum", "", "", "", data?.yearly_energy?.toFixed(0).toLocaleString('en-US')];
     columnWidths[3] = Math.max(columnWidths[3], totalRowOne[3].length);
     columnWidths[4] = Math.max(columnWidths[4], totalRow[4].length);
 
@@ -57,10 +57,10 @@ export const generateWindTextTable = (data) => {
 export const WIND_ENERGY_OUTPUT_FORMULA_EN =
     `The global formula to estimate the electricity generated in output of a wind system is:
 
-            E = ½ * ρ * A * w³ * Cp / 1000
+            E = ½ * rho * A * w³ * Cp / 1000
 
             E = Energy (kWh)
-            ρ - denotes the air density (in kilograms per cubic meter, kg/m³).
+            rho - denotes the air density (in kilograms per cubic meter, kg/m³).
             A = π * r² - is the swept area (in square meters, m²)
                 r = is the radius of the rotor (in meters, m)
             w = wind speed in meters per second for each hour of the period for which the energy is counted
@@ -73,6 +73,6 @@ export const WIND_ENERGY_OUTPUT_FORMULA_EN =
     We take as standard in our calculations 
     the Vestas V112-3.45 MW with a required area of 0.25 km2 and r = 50m - radius of the rotor 
     Cp = 0.4 
-    ρ = 1.225 
+    rho = 1.225 
     
     ------------------------------`
