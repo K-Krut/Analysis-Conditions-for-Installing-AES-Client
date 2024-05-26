@@ -223,10 +223,6 @@ function MapComponent() {
                         {renderPolygons(cropPolygons, cropColor)}
                     </GoogleMap>
                     <Notification message={notification} onClose={() => setNotification('')}/>
-
-                {/*{triggerDownload && (*/}
-                {/*    <PdfGenerator data={responseData} triggerDownload={triggerDownload} />*/}
-                {/*)}*/}
             </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <h1 className="text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl">Analysis Report</h1>

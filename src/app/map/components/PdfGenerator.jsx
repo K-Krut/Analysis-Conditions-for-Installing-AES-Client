@@ -11,7 +11,11 @@ import {
     generateEnergyOutputTable,
     ENERGY_OUTPUT_FORMULA_EN, RECOMMENDATIONS_STR
 } from '../../utils/map/solar-utils.js'
-import {generateWindEnergyOutputTable, WIND_ENERGY_OUTPUT_FORMULA_EN} from "@/app/utils/map/wind-utils";
+
+import {
+    generateWindEnergyOutputTable,
+    WIND_ENERGY_OUTPUT_FORMULA_EN
+} from "@/app/utils/map/wind-utils";
 
 
 function formatCoordinates(coords) {
@@ -136,9 +140,11 @@ const PdfGenerator = ({ data, shouldGeneratePdf, onDownloadCompleted }) => {
                 /***************************************/
 
                 if (data?.energy_output_stats && data?.energy_output_stats !== {}) {
-                    solarPfd(doc, data?.energy_output_stats)
-
-                    // windPfd(doc, data?.energy_output_stats)
+                    if (data.type === "wind") {
+                        windPfd(doc, data?.energy_output_stats)
+                    } else {
+                        solarPfd(doc, data?.energy_output_stats)
+                    }
                 } else {
                     setTextForDoc(doc, 10, defineY(doc), 10, 'times', 'normal', {},
                         `We are sorry to inform, but we unable to generate energy output prediction for your polygon `)
@@ -285,8 +291,7 @@ function windPfd(doc, response) {
 
     startY = 10
 
-    setTextForDoc(doc, 10, startY, 12, 'times', 'bold', {},
-        'Energy Output Formula')
+    setTextForDoc(doc, 10, startY, 12, 'times', 'bold', {}, 'Energy Output Formula')
 
     setTextForDoc(doc, 10, defineY(doc, 10), 10, 'times', 'normal', {},
         WIND_ENERGY_OUTPUT_FORMULA_EN)
