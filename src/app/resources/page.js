@@ -13,15 +13,15 @@ export default function Resources() {
             <Head>
                 <title>{'Resources | Solar Navigator'}</title>
             </Head>
-        <main className="flex min-h-screen flex-col bg-[#121212]">
-            <Navbar />
-            <div className="container mt-24 mx-auto px-12 py-4 relative">
-                <SolarEnergyOutputFormula />
-                <WindEnergyOutputFormula />
-                <LandscapeTypeTable />
-            </div>
-            <Footer />
-        </main>
-            </>
+            <main className="flex min-h-screen flex-col bg-[#121212]">
+                <Navbar/>
+                <div className="container mt-24 mx-auto px-12 py-4 relative">
+                    <SolarEnergyOutputFormula/>
+                    <WindEnergyOutputFormula/>
+                    <LandscapeTypeTable/>
+                </div>
+                <Footer/>
+            </main>
+        </>
     );
 }
