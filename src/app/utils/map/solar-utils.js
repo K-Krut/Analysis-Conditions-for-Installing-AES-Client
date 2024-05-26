@@ -6,7 +6,7 @@ export function generateEnergyOutputTable(data, year) {
     return [...months, ...[["Sum", year.toLocaleString('en-US')]]]
 }
 
-export const generateTextTableWeather = (data) => {
+export const generateSolarTextTable = (data) => {
     const headers = ['Month', 'Energy Output (kWh)'];
     let columnWidths = headers.map(header => header.length);
 
