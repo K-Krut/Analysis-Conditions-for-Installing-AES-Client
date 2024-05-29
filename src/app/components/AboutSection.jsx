@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 
 const AboutSection = () => {
@@ -8,11 +9,12 @@ const AboutSection = () => {
                "padding-bottom": "150px"
              }}>
       <div className="md:grid md:grid-cols-2 gap-8 items-center py-8 px-4 xl:gap-16 sm:py-16 xl:px-16">
-        <Image src="/images/landsat2.jpg" width={500} height={500} />
+        <Image src="/images/landsat2.jpg" width={500} height={500}  alt={"landsat2.jpg"}/>
         <div className="mt-4 md:mt-0 text-left flex flex-col h-full">
           <h2 className="text-4xl font-bold text-white mb-4">About</h2>
           <p className="text-base lg:text-lg">
-            Our web application harnesses advanced computational technologies to optimize solar energy installations in Ukraine. By integrating AI with satellite imagery and meteorological data, we offer precise site suitability analyses and performance forecasting. Our tool is invaluable for energy businesses and private homeowners alike, aiding in strategic planning, operational management, and financial decision-making. This technology promotes sustainable development, enhances energy independence, and mitigates environmental impacts, especially crucial in times of infrastructure vulnerability.
+              Дипломна робота присвячена дослідженню використання компʼютерних технологій у сфері відновлювальної енергетики.  Основною метою роботи є розробка програмного продукту, що допоміг би визначати придатність певної, обраної користувачем, ділянки території України для встановлення електростанцій альтернативних джерел енергії та передбачати потенційну ефективність роботи цих станцій, на обраній території.
+              У роботі зосереджено увагу на методах аналізу вибраних користувачем територій з врахуванням класифікації ландшафту, наданні певних рекомендацій щодо установки та експлуатації сонячних та вітрових електростанцій та прогнозування ефективності їх роботи на основі статистичних даних щодо погодних умов на обраній території. Програмний продукт представлено у формі веб-сайту з розробкою алгоритмів аналізу даних, бекенд та фронтенд частини.
           </p>
         </div>
       </div>

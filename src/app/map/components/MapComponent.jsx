@@ -5,6 +5,9 @@ import Notification from "@/app/map/components/Notification";
 import PdfGenerator from "@/app/map/components/PdfGenerator";
 import CursorSVG from "@/app/map/components/CursorSVG";
 import formatResponseData from "@/app/map/components/ResponseFormat"
+import Switch from '@mui/material/Switch';
+import { styled } from '@mui/material/styles';
+
 
 const mapContainerStyle = {
     width: '100%',
@@ -34,7 +37,11 @@ function MapComponent() {
     const [completedTyping, setCompletedTyping] = useState(true);
     const [shouldGeneratePdf, setShouldGeneratePdf] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
+    const [checked, setChecked] = useState(false);
 
+    const handleToggle = () => {
+        setChecked(!checked);
+    };
 
     const {isLoaded, loadError} = useLoadScript({
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY, libraries,
@@ -69,7 +76,6 @@ function MapComponent() {
     };
 
     const handleDownloadCompleted = () => {
-        console.log("onDownloadCompleted  - handleDownloadCompleted")
         setIsDownloading(false);
         setShouldGeneratePdf(false);
     };
@@ -93,7 +99,7 @@ function MapComponent() {
                     clearInterval(intervalId);
                     setCompletedTyping(true);
                 }
-            }, 20);
+            }, 16);
 
             return () => clearInterval(intervalId);
         }
@@ -123,6 +129,30 @@ function MapComponent() {
         }, 5000);
     };
 
+    const ColorSwitch = styled(Switch)(({ theme, checked }) => ({
+        width: 100,
+        height: 34,
+        '& .MuiSwitch-switchBase.Mui-checked': {
+            color: checked ? 'grey' : 'yellow',
+            transform: 'translateX(70px)',
+        },
+        '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+            backgroundColor: checked ? 'grey' : 'yellow',
+        },
+        '& .MuiSwitch-thumb': {
+            width: 24,
+            height: 24,
+        },
+        '& .MuiSwitch-switchBase': {
+            padding: 6,
+        },
+        '& .MuiSwitch-track': {
+            borderRadius: 20 / 2,
+            opacity: 1,
+            backgroundColor: 'rgba(204,122,27,0.58)',
+        },
+    }));
+
     const onPolygonComplete = polygon => {
         polygon.setMap(null);
         setResponseData(null);
@@ -135,7 +165,7 @@ function MapComponent() {
         fetch('http://127.0.0.1:8000/api/polygon/', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({coordinates: coordinates})
+            body: JSON.stringify({coordinates: coordinates, type: checked ? "wind" : "solar"})
         })
             .then(response => {
                 if (!response.ok) {
@@ -173,6 +203,17 @@ function MapComponent() {
     return (
         <>
             <div className="container-map-page">
+                <div className="toggle-container">
+                    <div className="label" style={{ color: 'grey', fontSize: '20px'}}>
+                        {checked ? 'Wind' : 'Solar'}
+                    </div>
+                    <ColorSwitch
+                        onChange={handleToggle}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                        size="large"
+                        checked={checked}
+                    />
+                </div>
                 <div className="map-container relative" style={mapContainerStyle}>
                     <Autocomplete
                         onLoad={ref => autocompleteRef.current = ref}
@@ -223,10 +264,6 @@ function MapComponent() {
                         {renderPolygons(cropPolygons, cropColor)}
                     </GoogleMap>
                     <Notification message={notification} onClose={() => setNotification('')}/>
-
-                {/*{triggerDownload && (*/}
-                {/*    <PdfGenerator data={responseData} triggerDownload={triggerDownload} />*/}
-                {/*)}*/}
             </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <h1 className="text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl">Analysis Report</h1>
