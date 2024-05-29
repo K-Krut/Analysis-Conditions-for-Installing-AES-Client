@@ -281,6 +281,16 @@ function windPfd(doc, response) {
     }
 
     /**************************************************************************************************************/
+    console.log(response.yearly_wind_rose)
+    if (response?.yearly_wind_rose) {
+        doc.addPage()
+        startY = 10
+        setTextForDoc(doc, 50, defineY(doc), 12, 'times', 'bold', {}, 'Yearly Wind Rose')
+        const contentWidth = doc.internal.pageSize.getWidth() - 5 * 10;
+        doc.addImage(response.yearly_wind_rose?.base_64_data, 'PNG', 10, defineY(doc), contentWidth, contentWidth * 0.75);
+    }
+
+    /**************************************************************************************************************/
 
     if (response?.month_energy_stats && response?.month_energy_stats !== []) {
         doc.addPage()
